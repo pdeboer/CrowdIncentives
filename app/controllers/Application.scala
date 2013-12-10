@@ -8,7 +8,9 @@ object Application extends Controller {
     implicit request =>
       if (session.get("user").isEmpty)
         Redirect("/login")
-      else
+      else {
+        //get parts
         Ok(views.html.index(session.get("user").get))
+      }
   }
 }

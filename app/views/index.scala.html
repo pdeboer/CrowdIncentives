@@ -1,8 +1,16 @@
-@(user: String)
+@(user: String, templateParts:List[TemplatePart] =List.empty[TemplatePart])
+
+@import _root_.controllers.model.TemplatePart
+
 
 @main("Welcome to CrowdIncentive") {
     
     <h1>Welcome @user</h1>
 
-blabla
+    <div class="menu">
+        <li>Global Proposals</li>
+        @for(p <- TemplateParts) {
+            <li>@p.name</li>
+        }
+    </div>
 }
