@@ -12,8 +12,8 @@ import controllers.UserData
 class LoginDAL {
 
 
-  def checkLogin(u:UserData): Boolean = {
-    if(u.name==null||u.password==null) false
+  def checkLogin(u: UserData): Boolean = {
+    if (u.name == null || u.password == null) false
     else DB.withConnection {
       implicit c =>
         val check = SQL("SELECT id FROM users WHERE username = {username} AND password={pw}").on('username -> u.name, 'pw -> u.password)()
@@ -22,7 +22,7 @@ class LoginDAL {
     }
   }
 
-  def register(u:UserData): Boolean = {
+  def register(u: UserData): Boolean = {
     DB.withConnection {
       implicit c =>
         val userExists = SQL("SELECT id FROM users WHERE username = {username}").on('username -> u.name)().size == 1

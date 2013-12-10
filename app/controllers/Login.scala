@@ -24,5 +24,3 @@ object Login extends Controller {
       else NotFound(views.html.login("Login not successful"))
   }
 }
-
-case class UserData(name: String, password: String)
