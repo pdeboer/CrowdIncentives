@@ -1,4 +1,5 @@
-@(user: String, templateParts: List[TemplatePart] = List.empty[TemplatePart])
+@(user: String,
+        templateParts: List[TemplatePart] = List.empty[TemplatePart])(content:Html =Html(""))
 
 
 @main("Welcome to CrowdIncentive") {
@@ -11,4 +12,9 @@
             <a hreF="/part/@p.id">@p.name</a>
         }
     </div>
+
+    <div class="content">
+        @content
+    </div>
+
 }

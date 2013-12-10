@@ -12,10 +12,9 @@ object Application extends Controller {
       else {
         //get parts
         Ok(views.html.index(session.get("user").get,
-          new TemplateDAL().getParts()))
+          new TemplateDAL().getParts())())
       }
   }
-
 }
 
 case class UserData(name: String, password: String)
