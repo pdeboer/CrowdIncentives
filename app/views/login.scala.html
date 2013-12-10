@@ -1,16 +1,20 @@
+@(message:String="")
+
 <h1>Login to your user account</h1>
-<form action="/login" method="post">
+<p style="color:#900">@message</p>
+@helper.form(action = routes.Login.login()) {
+
     <table>
         <tr>
             <td>Username</td>
-            <td><input type="text" name="user" /></td>
+            <td><input type="text" name="username" /></td>
         </tr>
         <tr>
             <td>Password</td>
-            <td><input type="password" name="password" /></td>
+            <td><input type="text" name="password"/></td>
         </tr>
         <tr>
             <td><input type="submit" vaue="login"/></td>
         </tr>
     </table>
-</form>
+}
