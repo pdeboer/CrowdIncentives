@@ -11,20 +11,18 @@ import play.api.data.validation._
  *         First created on 09/12/13 at 17:38
  */
 object Login extends Controller {
-  val userForm = Form(
-    mapping(
-      "name" -> nonEmptyText(8, 50),
-      "password" -> nonEmptyText(8, 50)
-    )(UserData.apply)(UserData.unapply)
-  )
+  def login() = Action {
+    implicit request =>
+      val map = request.body.asFormUrlEncoded.getOrElse(null)
+      val user = map.get("username").get.headOption.getOrElse(null)
+      val pw = map.get("password").get.headOption.getOrElse(null)
 
-  def login() = Action { implicit request =>
-    if(userForm.value.isEmpty)
-      Ok(views.html.login())
-    else if (new LoginDAL().checkLogin(userForm.get))
-      Ok(views.html.index("ok"))
-    else NotFound(views.html.login("Login not successful"))
+      if (map == null)
+        Ok(views.html.login())
+      else if (new LoginDAL().checkLogin(UserData(user, pw)))
+        Ok(views.html.index("ok"))
+      else NotFound(views.html.login("Login not successful"))
   }
 }
 
-case class UserData(name:String, password:String)
+case class UserData(name: String, password: String)
