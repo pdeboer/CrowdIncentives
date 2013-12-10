@@ -1,18 +1,21 @@
-@(data: List[IntegratedStory])
+@(data: List[IntegratedStory], indexData: IndexData)
 
-Create Integrated story
+@index(indexData) {
 
-<table class="list">
-    <tr>
-        <th>Name</th>
-        <th>Last modification</th>
-        <th>&nbsp;</th>
-    </tr>
-    @for(g <- data) {
+    Create Integrated story
+
+    <table class="list">
         <tr>
-            <td>@g.name</td>
-            <td>@g.modificationDateFormatted</td>
-            <td>show</td>
+            <th>Name</th>
+            <th>Last modification</th>
+            <th>&nbsp;</th>
         </tr>
-    }
-</table>
+        @for(g <- data) {
+            <tr>
+                <td>@g.name</td>
+                <td>@g.modificationDateFormatted</td>
+                <td>show</td>
+            </tr>
+        }
+    </table>
+}

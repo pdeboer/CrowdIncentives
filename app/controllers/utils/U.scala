@@ -2,7 +2,7 @@ package controllers.utils
 
 import play.api.mvc.Session
 import controllers.dal.UserDAL
-import controllers.User
+import controllers.{IndexData, User}
 
 /**
  * @author pdeboer

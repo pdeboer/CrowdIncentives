@@ -14,10 +14,7 @@ object Application extends Controller {
       if (session.get("user").isEmpty)
         Redirect("/login")
       else {
-        //get parts
-        val u = U.user(session)
-        Ok(views.html.index(u.name,
-          new TemplateDAL(u.id).getParts())())
+        Redirect("/global")
       }
   }
 }
@@ -28,3 +25,6 @@ case class IntegratedStory(id:Long, name:String, createDate:Date, lastModificati
   def modificationDateFormatted = Config.sdf.format(createDate)
 }
 case class Part(id:Long, name:String, content:String="")
+case class IndexData(user:User) {
+  val templateParts = new TemplateDAL(user.id).getParts()
+}

@@ -1,14 +1,13 @@
-@(user: String,
-        templateParts: List[TemplatePart] = List.empty[TemplatePart])(content:Html =Html(""))
+@(index:IndexData)(content:Html =Html(""))
 
 
 @main("Welcome to CrowdIncentive") {
 
-    <h1>Welcome @user</h1>
+    <h1>Welcome @index.user.name</h1>
 
     <div class="menu">
         <a href="/global">Global Proposals</a>
-        @for(p <- templateParts) {
+        @for(p <- index.templateParts) {
             <a hreF="/part/@p.id">@p.name</a>
         }
     </div>

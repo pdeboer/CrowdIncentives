@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
+import controllers.utils.U
 
 /**
  * @author pdeboer
@@ -8,6 +9,8 @@ import play.api.mvc.{Action, Controller}
  */
 object Global extends Controller {
   def list() = Action {
-    Ok(views.html.global(List.empty[IntegratedStory]))
+    implicit request =>
+    Ok(views.html.global(List.empty[IntegratedStory],
+      IndexData(U.user(session))))
   }
 }
