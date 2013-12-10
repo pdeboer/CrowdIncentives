@@ -1,6 +1,6 @@
 package controllers
 
-import _root_.dal.LoginDAL
+import controllers.dal.UserDAL
 import play.api.mvc.{Controller, Action}
 import play.api.data._
 import play.api.data.Forms._
@@ -14,13 +14,18 @@ object Login extends Controller {
   def login() = Action {
     implicit request =>
       val map = request.body.asFormUrlEncoded.getOrElse(null)
-      val user = map.get("username").get.headOption.getOrElse(null)
-      val pw = map.get("password").get.headOption.getOrElse(null)
-
       if (map == null)
         Ok(views.html.login())
-      else if (new LoginDAL().checkLogin(UserData(user, pw)))
-        Redirect("/").withSession("user" -> user)
-      else NotFound(views.html.login("Login not successful"))
+      else {
+        val user = map.get("username").get.headOption.getOrElse(null)
+        val pw = map.get("password").get.headOption.getOrElse(null)
+
+        val userId = new UserDAL().checkLogin(user, pw)
+
+
+        if (userId > 0)
+          Redirect("/").withSession("user" -> userId.toString)
+        else NotFound(views.html.login("Login not successful"))
+      }
   }
 }

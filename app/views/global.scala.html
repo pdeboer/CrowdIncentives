@@ -1,0 +1,18 @@
+@(data: List[IntegratedStory])
+
+Create Integrated story
+
+<table class="list">
+    <tr>
+        <th>Name</th>
+        <th>Last modification</th>
+        <th>&nbsp;</th>
+    </tr>
+    @for(g <- data) {
+        <tr>
+            <td>@g.name</td>
+            <td>@g.modificationDateFormatted</td>
+            <td>show</td>
+        </tr>
+    }
+</table>

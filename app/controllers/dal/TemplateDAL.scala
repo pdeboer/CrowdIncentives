@@ -9,7 +9,7 @@ import play.api.Play.current
  * @author pdeboer
  *         First created on 09/12/13 at 22:15
  */
-class TemplateDAL {
+class TemplateDAL(val roundId:Long) {
   val CURRENT_TEMPLATE_ID = 1
 
   def getParts(): List[TemplatePart] = {
