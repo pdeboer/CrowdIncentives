@@ -20,7 +20,7 @@ object Login extends Controller {
       if (map == null)
         Ok(views.html.login())
       else if (new LoginDAL().checkLogin(UserData(user, pw)))
-        Ok(views.html.index("ok"))
+        Ok(views.html.index("ok")).withSession("user" -> user)
       else NotFound(views.html.login("Login not successful"))
   }
 }
