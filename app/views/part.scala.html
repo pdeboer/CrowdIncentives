@@ -1,9 +1,9 @@
-@(data: List[IntegratedStory], indexData: IndexData)
+@(data: List[StoryPart], part:TemplatePart, indexData: IndexData)
 
     @index(indexData) {
 
 
-        <a href="/global/new">Create Integrated story</a>
+        <a href="/part/@part.id/new">Create new @part.name</a>
 
         @if(data.size > 0) {
             <table class="list">
@@ -12,10 +12,10 @@
                     <th>Last modification</th>
                     <th>&nbsp;</th>
                 </tr>
-                @for(g <- data) {
+                @for(p <- data) {
                     <tr>
-                        <td>@g.name</td>
-                        <td>@g.modificationDateFormatted</td>
+                        <td>@p.name</td>
+                        <td>@p.modificationDateFormatted</td>
                         <td>show</td>
                     </tr>
                 }

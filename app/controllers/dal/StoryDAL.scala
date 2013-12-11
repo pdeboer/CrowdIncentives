@@ -3,7 +3,7 @@ package controllers.dal
 import play.api.db.DB
 import anorm._
 import play.api.Play.current
-import controllers.{Part, User, IntegratedStory, Global}
+import controllers.{StoryPart, User, IntegratedStory, Global}
 import java.util.Date
 
 
@@ -41,7 +41,7 @@ class StoryDAL(val roundId: Long) {
             ORDER BY last_modification DESC
           """
         ).on('round -> roundId, 'template -> templatePartId)().map(r =>
-          Part(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")))
+          StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")))
           )
 
         data.toList
