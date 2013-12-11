@@ -19,6 +19,8 @@ object Application extends Controller {
   }
 }
 
+//need to define all model classes here, otherwise invisible to views. that's ugly
+
 case class User(id:Long, name: String, round:Long = -1L)
 case class TemplatePart (id:Long, name:String, beforeText:String="", afterText:String="")
 case class IntegratedStory(id:Long, name:String, createDate:Date, lastModification:Date, author:User = null) {
@@ -33,4 +35,11 @@ object StoryPart{
 
 case class IndexData(user:User) {
   val templateParts = new TemplateDAL(user.id).getParts()
+}
+
+class Counter(var init: Int = 0) {
+  def incrementAndGet() = {
+    init += 1
+    init
+  }
 }

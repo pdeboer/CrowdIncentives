@@ -35,3 +35,25 @@
     font-style: italic;
     margin-top:20px;
 }
+
+.list td, .list th {
+    padding:3px;
+    border:0;
+    margin:0;
+}
+
+.list th {
+    background-color:#c9c9c9
+}
+
+table.list {
+    border:1px solid #ccc;
+    padding:0;
+    margin:0;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.list tr.bg1 {
+    background-color:#eee;
+}

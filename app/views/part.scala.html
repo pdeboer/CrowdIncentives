@@ -1,24 +1,27 @@
-@(data: List[StoryPart], part:TemplatePart, indexData: IndexData)
+@(data: List[StoryPart], part: TemplatePart, indexData: IndexData, counter: Counter = new Counter())
 
-    @index(indexData) {
+@index(indexData) {
 
 
-        <a href="/part/@part.id/create">Create new @part.name</a>
+    <a href="/part/@part.id/create">Create new @part.name</a>
 
-        @if(data.size > 0) {
-            <table class="list">
-                <tr>
-                    <th>Name</th>
-                    <th>Last modification</th>
-                    <th>&nbsp;</th>
+    @if(data.size > 0) {
+        <table class="list">
+            <tr>
+                <th>Name</th>
+                <th>Author</th>
+                <th>Last modification</th>
+                <th>&nbsp;</th>
+            </tr>
+
+            @for(p <- data) {
+                <tr class="bg@(counter.incrementAndGet() % 2)">
+                    <td>@p.name</td>
+                    <td>@p.author.name</td>
+                    <td>@p.modificationDateFormatted</td>
+                    <td><a href="/part/@part.id/show/@p.id">show</a></td>
                 </tr>
-                @for(p <- data) {
-                    <tr>
-                        <td>@p.name</td>
-                        <td>@p.modificationDateFormatted</td>
-                        <td>show</td>
-                    </tr>
-                }
-            </table>
-        }
+            }
+        </table>
     }
+}
