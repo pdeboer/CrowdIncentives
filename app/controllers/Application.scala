@@ -27,6 +27,9 @@ case class IntegratedStory(id:Long, name:String, createDate:Date, lastModificati
 case class StoryPart(id:Long, name:String, content:String="", createDate:Date, lastModification:Date, author:User = null) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 }
+object StoryPart{
+  def empty = StoryPart(-1, "", "", new Date(), new Date(), null)
+}
 
 case class IndexData(user:User) {
   val templateParts = new TemplateDAL(user.id).getParts()

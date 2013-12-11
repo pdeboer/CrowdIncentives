@@ -1,0 +1,13 @@
+@(part: StoryPart, template: TemplatePart, indexData: IndexData)
+
+@index(indexData) {
+    <h2>@template.name: @part.name</h2>
+    <p class="author">Part authored by <strong>@part.author.name</strong>, last modified on
+        <strong>@part.modificationDateFormatted</strong></p>
+
+    <p class="before">@template.beforeText</p>
+
+    <p class="part_content">@part.content</p>
+
+    <p class="after">@template.afterText</p>
+}

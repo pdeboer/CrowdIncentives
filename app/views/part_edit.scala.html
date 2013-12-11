@@ -1,0 +1,22 @@
+@(part: StoryPart, template: TemplatePart, indexData: IndexData)
+
+@index(indexData) {
+    @template.beforeText
+    <form action="/part/@template.id/save/@part.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
+        <table>
+            <tr>
+                <th>Name</th>
+                <td><input type="text" name="name" value="@part.name" /></td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td><textarea name="content">@part.content</textarea></td>
+            </tr>
+            <tr>
+                <th><a href="/part/@template.id" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
+                <td><input type="submit" value="save" /></td>
+            </tr>
+        </table>
+        @template.afterText
+    </form>
+}
