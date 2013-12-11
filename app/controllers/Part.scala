@@ -14,9 +14,15 @@ object Part extends Controller {
     implicit request =>
       val u = U.user(session)
       val storyDAL = new StoryDAL(u.round)
-      Ok(views.html.part(storyDAL.getParts(templatePartId),
-        new TemplateDAL(u.round).getPart(templatePartId),
-        IndexData(u)))
+      val templateDAL: TemplateDAL = new TemplateDAL(u.round)
+
+      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
+        Forbidden(views.html.error(IndexData(u)))
+      else
+        Ok(views.html.part(storyDAL.getParts(templatePartId),
+          templateDAL.getPart(templatePartId),
+          IndexData(u)))
+
   }
 
   def save(templatePartId: Long, partId: Long) = Action {
@@ -37,16 +43,16 @@ object Part extends Controller {
 
         if (partId > 0) {
           //update
-          val current = storyDAL.getPart(partId)
-          if (current.author.id != u.id) {
+          if (Security.checkUserAllowedToEditPart(u, partId)) {
             Forbidden(views.html.error(IndexData(u)))
           } else {
+            val current = storyDAL.getPart(partId)
             storyDAL.updatePart(partId, part)
             Redirect("/part/" + templatePartId + "/show/" + partId)
           }
         } else {
           //insert
-          val newId:Option[Long] = storyDAL.insertPart(templatePartId, part)
+          val newId: Option[Long] = storyDAL.insertPart(templatePartId, part)
           Redirect("/part/" + templatePartId + "/show/" + newId.get)
         }
       }
@@ -56,8 +62,12 @@ object Part extends Controller {
     implicit request =>
       val u = U.user(session)
       val templateDAL = new TemplateDAL(u.round)
-      Ok(views.html.part_edit(StoryPart.empty, templateDAL.getPart(templatePartId),
-        IndexData(u)))
+
+      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
+        Forbidden(views.html.error(IndexData(u)))
+      else
+        Ok(views.html.part_edit(StoryPart.empty, templateDAL.getPart(templatePartId),
+          IndexData(u)))
   }
 
   def edit(templatePartId: Long, partId: Long) = Action {
@@ -66,8 +76,13 @@ object Part extends Controller {
       val storyDAL = new StoryDAL(u.round)
       val part = storyDAL.getPart(partId)
       val templateDAL = new TemplateDAL(u.round)
-      Ok(views.html.part_edit(part, templateDAL.getPart(templatePartId),
-        IndexData(u)))
+
+      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)) ||
+        !Security.checkUserAllowedToEditPart(u, partId))
+        Forbidden(views.html.error(IndexData(u)))
+      else
+        Ok(views.html.part_edit(part, templateDAL.getPart(templatePartId),
+          IndexData(u)))
   }
 
   def show(templatePartId: Long, partId: Long) = Action {
@@ -76,7 +91,11 @@ object Part extends Controller {
       val storyDAL = new StoryDAL(u.round)
       val part = storyDAL.getPart(partId)
       val templateDAL = new TemplateDAL(u.round)
-      Ok(views.html.part_show(part, templateDAL.getPart(templatePartId),
-        IndexData(u)))
+
+      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
+        Forbidden(views.html.error(IndexData(u)))
+      else
+        Ok(views.html.part_show(part, templateDAL.getPart(templatePartId),
+          IndexData(u)))
   }
 }

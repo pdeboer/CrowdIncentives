@@ -1,7 +1,7 @@
 package controllers.utils
 
 import controllers.{TemplatePart, User}
-import controllers.dal.TemplateDAL
+import controllers.dal.{StoryDAL, TemplateDAL}
 
 /**
  * @author pdeboer
@@ -10,4 +10,7 @@ import controllers.dal.TemplateDAL
 object Security {
   def checkUserAccessToTemplatePart(u: User, t: TemplatePart) =
     new TemplateDAL(u.round).getParts().exists(_.id == t.id)
+
+  def checkUserAllowedToEditPart(u: User, partId: Long) =
+    new StoryDAL(u.round).getPart(partId).author.id == u.id
 }
