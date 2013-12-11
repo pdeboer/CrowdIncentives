@@ -2,8 +2,10 @@
 
 @index(indexData) {
 
-    Create Integrated story
 
+    <a href="/global/new">Create Integrated story</a>
+
+    @if(data.size > 0) {
     <table class="list">
         <tr>
             <th>Name</th>
@@ -18,4 +20,5 @@
             </tr>
         }
     </table>
+    }
 }
