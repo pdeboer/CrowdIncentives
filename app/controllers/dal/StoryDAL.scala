@@ -115,6 +115,20 @@ class StoryDAL(val roundId: Long) {
     }
   }
 
+  def getTemplateId(): Long = {
+    DB.withConnection {
+      implicit c =>
+        val r = SQL(
+          """
+            SELECT r.template_id
+            FROM round r INNER JOIN users u ON r.id = u.round
+            WHERE u.round={round}
+          """).on( 'round -> roundId)().headOption
+
+        if (r.isEmpty) -1 else r.get.apply[Long]("template_id")
+    }
+  }
+
   def getPart(partId: Long): StoryPart = {
     DB.withConnection {
       implicit c =>

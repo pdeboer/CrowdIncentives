@@ -1,9 +1,9 @@
-@(data: List[IntegratedStory], indexData: IndexData, counter:Counter = new Counter())
+@(data: List[IntegratedStory], templateId:Long, indexData: IndexData, counter:Counter = new Counter())
 
     @index(indexData) {
 
 
-        <a href="/global/new">Create Integrated story</a>
+        <a href="/global/@templateId/create">Create Integrated story</a>
 
         @if(data.size > 0) {
             <table class="list">

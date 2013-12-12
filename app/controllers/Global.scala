@@ -15,6 +15,7 @@ object Global extends Controller {
       val u = U.user(session)
       val storyDAL = new StoryDAL(u.round)
       Ok(views.html.global(storyDAL.getIntegratedStories(),
+        storyDAL.getTemplateId(),
         IndexData(u)))
   }
 
@@ -52,15 +53,12 @@ object Global extends Controller {
       }
   }
 
-  def create(templatePartId: Long) = Action {
+  def create(templateId: Long) = Action {
     implicit request =>
       val u = U.user(session)
       val templateDAL = new TemplateDAL(u.round)
 
-      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
-        Forbidden(views.html.error(IndexData(u)))
-      else
-        Ok(views.html.part_edit(StoryPart.empty, templateDAL.getPart(templatePartId),
+        Ok(views.html.global_edit(IntegratedStory.empty, templateDAL.getParts(), templateId,
           IndexData(u)))
   }
 

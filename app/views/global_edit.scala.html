@@ -1,23 +1,66 @@
-@(global: IntegratedStory, templateParts: List[TemplatePart], template: Long, indexData: IndexData)
+@(global: IntegratedStory, templateParts: List[TemplatePart], template: Long, indexData: IndexData, counter: Counter = new Counter())
 
 @index(indexData) {
+    <script type="text/javascript">
+    function toggle ( elId ) {
+    var el = document.getElementById ( elId ) ;
 
-    <form action="/global/@template/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
-    @for(p <- templateParts) {
-        Name: <input type="text" name="name" />
-
-        <p class="before">@p.beforeText</p>
-
-        @if(global.partForTemplate(p.id) == null) {
-            nothing yet
-        } else {
-            <p class="part_name">@global.partForTemplate(p.id)</p>
-            <p class="part_content">@global.partForTemplate(p.id)</p>
-        }
-        CHOOSE
-
-        <p class="after">@p.beforeText</p>
+    if ( el.style.display == "" )
+    el.style.display = "none" ;
+    else
+    el.style.display = "" ;
     }
+    </script>
+
+    <h2>Your integrated story</h2>
+    <form action="/global/@template/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
+        Name: <input type="text" name="name" />
+        @for(p <- templateParts) {
+            <p class="before">@p.beforeText</p>
+
+            @if(global.partForTemplate(p.id) != null) {
+                <p class="part_name">@global.partForTemplate(p.id)</p>
+                <p class="part_content">@global.partForTemplate(p.id)</p>
+            }
+
+            <a href="#" onclick="toggle ( 'part@p.id' )">
+            @if(global.partForTemplate(p.id) == null) {
+                CHOOSE
+            } else {
+                CHANGE
+            }</a>
+
+            <div id="part@p.id" style="display : none ;">
+            @if(global.candidatesForTemplatePart(p.id, indexData.user).size > 0) {
+                <table class="list">
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Name</th>
+                        <th>Author</th>
+                        <th>Last modification</th>
+                        <th>&nbsp;</th>
+                    </tr>
+
+                    @for(t <- global.candidatesForTemplatePart(p.id, indexData.user)) {
+                        <tr class="bg@(counter.incrementAndGet() % 2)">
+                            <td><input type="radio" name="part@p.id" value="@t.id" @if(global.partForTemplate(p.id) == t.id) {
+                                    checked="checked" }></td>
+                            <td>@t.name</td>
+                            <td>@t.author.name</td>
+                            <td>@t.modificationDateFormatted</td>
+                            <td><a href="#" onclick="toggle('content@t.id')">show</a></td>
+                        </tr>
+                        <tr class="bg@(counter.get() % 2)" style="display:none;" id="content@t.id">
+                            <td colspan="5">@t.content</td>
+                        </tr>
+                    }
+                </table>
+            }
+            </div>
+
+
+            <p class="after">@p.afterText</p>
+        }
     </form>
 
     <p><a href="/global">back to overview</a></p>

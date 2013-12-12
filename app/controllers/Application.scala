@@ -2,7 +2,7 @@ package controllers
 
 import play.api._
 import play.api.mvc._
-import controllers.dal.TemplateDAL
+import controllers.dal.{StoryDAL, TemplateDAL}
 import java.text.SimpleDateFormat
 import java.util.Date
 import controllers.utils.Config
@@ -29,7 +29,16 @@ case class IntegratedStory(id:Long, name:String, createDate:Date, lastModificati
   def partForTemplate(templateId:Long):StoryPart = {
     if(parts == null) null else parts.find(_.template.id == templateId).getOrElse(null)
   }
+
+  def candidatesForTemplatePart(partId:Long, user:User) =
+    new StoryDAL(user.round).getParts(partId)
 }
+object IntegratedStory {
+  def empty = {
+    IntegratedStory(-1, "", new Date(), new Date())
+  }
+}
+
 case class StoryPart(id:Long, name:String, content:String="", createDate:Date, lastModification:Date, author:User = null, template:TemplatePart=null) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 }
@@ -46,4 +55,5 @@ class Counter(var init: Int = 0) {
     init += 1
     init
   }
+  def get() = init
 }
