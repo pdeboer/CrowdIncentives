@@ -1,0 +1,20 @@
+@(global: IntegratedStory, template:List[TemplatePart], indexData: IndexData)
+
+@index(indexData) {
+    <h2>@global.name</h2>
+    <p class="author">Story composed by <strong>@global.author.name</strong>, last modified on
+        <strong>@global.modificationDateFormatted</strong></p>
+
+    @if(global.parts.size > 0) {
+        @for(p <- global.parts) {
+            <p class="before">@p.template.beforeText</p>
+            <p class="part_name">@p.name</p>
+            <p class="part_content">@p.content</p>
+            <p class="after">@p.template.beforeText</p>
+        }
+    }else{
+        No data yet.
+    }
+
+    <p><a href="/global">back to overview</a></p>
+}

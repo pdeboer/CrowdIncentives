@@ -1,4 +1,4 @@
-@(data: List[IntegratedStory], indexData: IndexData)
+@(data: List[IntegratedStory], indexData: IndexData, counter:Counter = new Counter())
 
     @index(indexData) {
 
@@ -9,12 +9,14 @@
             <table class="list">
                 <tr>
                     <th>Name</th>
+                    <th>Author</th>
                     <th>Last modification</th>
                     <th>&nbsp;</th>
                 </tr>
                 @for(g <- data) {
-                    <tr>
+                    <tr class="bg@(counter.incrementAndGet() % 2)">
                         <td>@g.name</td>
+                        <td>@g.author.name</td>
                         <td>@g.modificationDateFormatted</td>
                         <td>show</td>
                     </tr>
