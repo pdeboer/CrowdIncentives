@@ -1,9 +1,9 @@
-@(data: List[IntegratedStory], templateId:Long, indexData: IndexData, counter:Counter = new Counter())
+@(data: List[IntegratedStory], indexData: IndexData, counter: Counter = new Counter())
 
     @index(indexData) {
 
 
-        <a href="/global/@templateId/create">Create Integrated story</a>
+        <a href="/global/create">Create Integrated story</a>
 
         @if(data.size > 0) {
             <table class="list">
@@ -18,7 +18,14 @@
                         <td>@g.name</td>
                         <td>@g.author.name</td>
                         <td>@g.modificationDateFormatted</td>
-                        <td>show</td>
+                        <td>
+                        @if(g.author.id == indexData.user.id) {
+                            <a href="/global/edit/@g.id">                                edit
+                            </a>
+                        } else {
+                            <a href="/global/show/@g.id">show</a>
+                        }
+                        </td>
                     </tr>
                 }
             </table>

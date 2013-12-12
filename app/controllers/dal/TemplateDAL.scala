@@ -11,6 +11,18 @@ import play.api.Play.current
  */
 class TemplateDAL(val roundId: Long) {
 
+  def getTemplateId():Long = {
+    DB.withConnection {
+      implicit c =>
+        val u = SQL(
+          """
+            SELECT template_id FROM round WHERE id = {id}
+          """).on('id -> roundId)().headOption
+
+        if (u.isEmpty) -1 else u.get.apply[Long]("template_id")
+    }
+  }
+
   def getPart(templatePartId: Long): TemplatePart = {
     DB.withConnection {
       implicit c =>

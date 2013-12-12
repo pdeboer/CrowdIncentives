@@ -15,69 +15,68 @@ object Global extends Controller {
       val u = U.user(session)
       val storyDAL = new StoryDAL(u.round)
       Ok(views.html.global(storyDAL.getIntegratedStories(),
-        storyDAL.getTemplateId(),
         IndexData(u)))
   }
 
 
-  def save(templatePartId: Long, partId: Long) = Action {
+  def save(globalId: Long) = Action {
     implicit request =>
     //dal init
       val u = U.user(session)
       val storyDAL = new StoryDAL(u.round)
       val templateDAL = new TemplateDAL(u.round)
 
-      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId))) {
-        Forbidden(views.html.error(IndexData(u)))
-      } else {
-        //form handling
-        val map = request.body.asFormUrlEncoded.get
-        val name = map.get("name").get.head
-        val content = map.get("content").get.head
-        val part = StoryPart(partId, name, content, new Date(), new Date(), u)
+      //form handling
+      val map = request.body.asFormUrlEncoded.get
+      val name = map.get("name").get.head
 
-        if (partId > 0) {
-          //update
-          if (Security.checkUserAllowedToEditPart(u, partId)) {
-            Forbidden(views.html.error(IndexData(u)))
-          } else {
-            val current = storyDAL.getPart(partId)
-            storyDAL.updatePart(partId, part)
-            Redirect("/part/" + templatePartId + "/show/" + partId)
-          }
+      val associations = templateDAL.getParts().map(p => {
+        val idOp = map.get("part" + p.id).getOrElse(List()).headOption
+        val id = idOp.getOrElse(null)
+        if (id == null) null else storyDAL.getPart(id.toLong)
+      }).filterNot(_ == null)
+
+      val global = IntegratedStory(globalId, name, new Date(), new Date(), u, associations)
+
+      if (globalId > 0) {
+        //update
+        if (!Security.checkUserAllowedToEditGlobal(u, globalId)) {
+          Forbidden(views.html.error(IndexData(u)))
         } else {
-          //insert
-          val newId: Option[Long] = storyDAL.insertPart(templatePartId, part)
-          Redirect("/part/" + templatePartId + "/show/" + newId.get)
+          storyDAL.updateIntegratedStory(global)
+          Redirect("/global/show/" + globalId)
         }
+      } else {
+        //insert
+        val newId: Long = storyDAL.insertIntegratedStory(global)
+        Redirect("/global/show/" + newId)
       }
+
   }
 
-  def create(templateId: Long) = Action {
+  def create() = Action {
     implicit request =>
       val u = U.user(session)
       val templateDAL = new TemplateDAL(u.round)
 
-        Ok(views.html.global_edit(IntegratedStory.empty, templateDAL.getParts(), templateId,
-          IndexData(u)))
+      Ok(views.html.global_edit(IntegratedStory.empty, templateDAL.getParts(),
+        IndexData(u)))
   }
 
-  def edit(templatePartId: Long, partId: Long) = Action {
+  def edit(globalId: Long) = Action {
     implicit request =>
       val u = U.user(session)
       val storyDAL = new StoryDAL(u.round)
-      val part = storyDAL.getPart(partId)
       val templateDAL = new TemplateDAL(u.round)
 
-      if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)) ||
-        !Security.checkUserAllowedToEditPart(u, partId))
+      if (!Security.checkUserAllowedToEditGlobal(u, globalId)) {
         Forbidden(views.html.error(IndexData(u)))
-      else
-        Ok(views.html.part_edit(part, templateDAL.getPart(templatePartId),
-          IndexData(u)))
+      } else {
+        Ok(views.html.global_edit(storyDAL.getIntegratedStory(globalId), templateDAL.getParts(), IndexData(u)))
+      }
   }
 
-  def show(templatePartId: Long, globalId: Long) = Action {
+  def show(globalId: Long) = Action {
     implicit request =>
       val u = U.user(session)
       val storyDAL = new StoryDAL(u.round)

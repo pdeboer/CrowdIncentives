@@ -13,4 +13,10 @@ object Security {
 
   def checkUserAllowedToEditPart(u: User, partId: Long) =
     new StoryDAL(u.round).getPart(partId).author.id == u.id
+
+  def checkUserAllowedToViewGlobal(u: User, globalId: Long) =
+    new StoryDAL(u.round).getIntegratedStories().exists(_.id == globalId)
+
+  def checkUserAllowedToEditGlobal(u: User, globalId: Long) =
+    new StoryDAL(u.round).getIntegratedStory(globalId).author.id == u.id
 }

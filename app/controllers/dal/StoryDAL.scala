@@ -38,7 +38,7 @@ class StoryDAL(val roundId: Long) {
       implicit c =>
         val r = SQL(
           """
-            SELECT g.id, g.name, p.create_date, p.last_modification, u.username, p.user_id
+            SELECT g.id, g.name, g.create_date, g.last_modification, u.username, g.user_id
             FROM global g INNER JOIN users u ON g.user_id = u.id
             WHERE g.id={id} and g.round_id={round}
           """).on('id -> globalId, 'round -> roundId)().headOption
@@ -47,23 +47,66 @@ class StoryDAL(val roundId: Long) {
 
         val data = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id,
-              tp.id AS tpid, tp.description as tpdesc, tp.before_text as tpbefore, after_text as tpafter
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, tp.id AS templatepart_id, tp.description as tpdesc, tp.before_text as tpbefore, after_text as tpafter
             FROM part p INNER JOIN users u ON p.user_id = u.id
               INNER JOIN global_parts gp ON p.id = gp.part_id AND gp.global_id = {global}
-              INNER JOIN template_part tp ON p.template_id = tp.id
+              INNER JOIN template_part tp ON p.template_part_id = tp.id
             WHERE p.round_id = {round}
-            ORDER BY last_modification DESC
+            ORDER BY tp.id ASC
           """
         ).on('round -> roundId, 'global -> globalId)().map(r =>
           StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"),
             author = User(r[Long]("user_id"), r[String]("username")),
-            template = TemplatePart(r[Long]("tpd"), r[String]("tpdesc"), r[String]("tpbefore"), r[String]("tpafter")))
+            template = TemplatePart(r[Long]("template_part.id"), r[String]("template_part.description"), r[String]("template_part.before_text"), r[String]("template_part.after_text")))
           )
 
         story.parts = data.toList
 
         story
+    }
+  }
+
+  def insertIntegratedStory(newStory: IntegratedStory) = {
+    DB.withConnection {
+      implicit c =>
+        val id:Option[Long] = SQL(
+          """
+            INSERT INTO global (name, create_date, last_modification, user_id, round_id)
+            VALUES ({name}, NOW(), NOW(), {user}, {round})
+          """
+        ).on('name -> newStory.name, 'user -> newStory.author.id, 'round -> roundId)
+          .executeInsert()
+
+        //save all associations
+        updateIntegratedStory(IntegratedStory(id.get, newStory.name, newStory.createDate, newStory.lastModification, newStory.author, newStory.parts))
+
+        id.get
+    }
+  }
+
+  def updateIntegratedStory(newStory: IntegratedStory) {
+    DB.withConnection {
+      implicit c =>
+      //update name
+        SQL( """
+          UPDATE global SET name={name}, last_modification=NOW()
+          WHERE id={id}
+             """).on('name -> newStory.name, 'id -> newStory.id).executeUpdate()
+
+
+        //delete old
+        SQL(
+          """
+          DELETE FROM global_parts WHERE global_id={id}
+          """).on('id -> newStory.id).executeUpdate()
+
+        newStory.parts.foreach(p => {
+          SQL(
+            """
+              INSERT INTO global_parts (global_id, part_id)
+              VALUES({global}, {part})
+            """).on('global -> newStory.id, 'part -> p.id).executeInsert()
+        })
     }
   }
 
@@ -123,7 +166,7 @@ class StoryDAL(val roundId: Long) {
             SELECT r.template_id
             FROM round r INNER JOIN users u ON r.id = u.round
             WHERE u.round={round}
-          """).on( 'round -> roundId)().headOption
+          """).on('round -> roundId)().headOption
 
         if (r.isEmpty) -1 else r.get.apply[Long]("template_id")
     }

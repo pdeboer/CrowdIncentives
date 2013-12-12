@@ -8,10 +8,10 @@ POST        /login                      controllers.Login.login
 GET         /login                      controllers.Login.login
 
 GET         /global                     controllers.Global.list
-GET         /global/:template/create                 controllers.Global.create(template:Long)
-GET         /global/:template/edit/:global                 controllers.Global.edit(template:Long, global:Long)
-POST        /global/:template/save/:global  controllers.Global.save(template:Long, global:Long)
-GET         /global/:template/show/:global        controllers.Global.show(template:Long, global:Long)
+GET         /global/create                 controllers.Global.create()
+GET         /global/edit/:global                 controllers.Global.edit(global:Long)
+POST        /global/save/:global  controllers.Global.save(global:Long)
+GET         /global/show/:global        controllers.Global.show(global:Long)
 
 
 GET         /part/:template                   controllers.Part.list(template:Long)
