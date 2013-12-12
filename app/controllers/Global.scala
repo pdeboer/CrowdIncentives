@@ -44,12 +44,12 @@ object Global extends Controller {
           Forbidden(views.html.error(IndexData(u)))
         } else {
           storyDAL.updateIntegratedStory(global)
-          Redirect("/global/show/" + globalId)
+          Redirect("/global/edit/" + globalId)
         }
       } else {
         //insert
         val newId: Long = storyDAL.insertIntegratedStory(global)
-        Redirect("/global/show/" + newId)
+        Redirect("/global/edit/" + newId)
       }
 
   }

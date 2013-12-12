@@ -21,7 +21,7 @@
             @if(global.partForTemplate(p.id) != null) {
                 <p class="part_name">@global.partForTemplate(p.id).name</p>
                 <p class="part_content">@global.partForTemplate(p.id).content</p>
-                <a href="#" onclick="toggle ( 'part@p.id' )">
+                <a onclick="toggle ( 'part@p.id' )">
                     CHANGE </a>
 
             }
@@ -46,7 +46,7 @@
                             <td>@t.name</td>
                             <td>@t.author.name</td>
                             <td>@t.modificationDateFormatted</td>
-                            <td><a href="#" onclick="toggle ( 'content  @t.id ')">show</a></td>
+                            <td><a onclick="toggle ( 'content@t.id')">show</a></td>
                         </tr>
                         <tr class="bg@(counter.get() % 2)" style="display : none ;" id="content@t.id">
                             <td colspan="5" class="part_content">@t.content</td>

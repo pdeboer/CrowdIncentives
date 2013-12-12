@@ -66,7 +66,7 @@ object StoryPart {
 }
 
 case class IndexData(user: User) {
-  val templateParts = new TemplateDAL(user.id).getParts()
+  val templateParts = new TemplateDAL(user.round).getParts()
 }
 
 class Counter(var init: Int = 0) {
