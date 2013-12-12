@@ -57,3 +57,7 @@ table.list {
 .list tr.bg1 {
     background-color:#eee;
 }
+
+.part_content {
+    white-space: pre-line;
+}

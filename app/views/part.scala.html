@@ -19,7 +19,13 @@
                     <td>@p.name</td>
                     <td>@p.author.name</td>
                     <td>@p.modificationDateFormatted</td>
-                    <td><a href="/part/@part.id/show/@p.id">show</a></td>
+                    <td>
+                        @if(p.author.id == indexData.user.id) {
+                            <a href="/part/@part.id/edit/@p.id">edit</a>
+                        }else{
+                            <a href="/part/@part.id/show/@p.id">show</a>
+                        }
+                    </td>
                 </tr>
             }
         </table>
