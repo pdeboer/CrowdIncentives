@@ -1,0 +1,24 @@
+@(global: IntegratedStory, templateParts: List[TemplatePart], template: Long, indexData: IndexData)
+
+@index(indexData) {
+
+    <form action="/global/@template/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
+    @for(p <- templateParts) {
+        Name: <input type="text" name="name" />
+
+        <p class="before">@p.beforeText</p>
+
+        @if(global.partForTemplate(p.id) == null) {
+            nothing yet
+        } else {
+            <p class="part_name">@global.partForTemplate(p.id)</p>
+            <p class="part_content">@global.partForTemplate(p.id)</p>
+        }
+        CHOOSE
+
+        <p class="after">@p.beforeText</p>
+    }
+    </form>
+
+    <p><a href="/global">back to overview</a></p>
+}
