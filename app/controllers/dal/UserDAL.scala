@@ -21,15 +21,25 @@ class UserDAL {
     }
   }
 
-  def register(name:String, password:String): Boolean = {
+  def register(name:String, password:String, code:String): Boolean = {
     DB.withConnection {
       implicit c =>
         val userExists = SQL("SELECT id FROM users WHERE username = {username}").on('username -> name)().size == 1
 
-        if (userExists) false
+        val codeExistsAndUnused = SQL(
+          """
+            SELECT round_id FROM codes
+            WHERE code={code} AND code NOT IN (
+              SELECT code FROM users
+            )
+          """).on('code->code)()
+
+        if (userExists || codeExistsAndUnused.headOption.isEmpty) false
         else {
-          val i: Option[Long] = SQL("INSERT INTO users (username, password) VALUES({username}, {pw})")
-            .on('username -> name, 'pw -> password)
+          val round = codeExistsAndUnused.head.apply[Long]("round_id")
+
+          val i: Option[Long] = SQL("INSERT INTO users (username, password, round) VALUES({username}, {pw}, {round})")
+            .on('username -> name, 'pw -> password, 'round->round)
             .executeInsert()
           i.isEmpty
         }

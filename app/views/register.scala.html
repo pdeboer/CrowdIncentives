@@ -1,0 +1,43 @@
+@(message: String = "")
+
+@main("Welcome to CrowdIncentive") {
+
+    <h1>Register your username</h1>
+    <p style="color : #900">@message</p>
+
+    <script type="text/javascript">
+        function formSubmit() {
+        var pw1 = document.getElementById('pw1' ).value;
+        var pw2 = document.getElementById('pw2' ).value;
+
+        var ok = pw1 == pw2;
+            if(!ok) alert("Your passwords dont match");
+            return ok;
+        }
+    </script>
+
+    <form action="/register" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return formSubmit()">
+        <table>
+            <tr>
+                <td>Choose Username</td>
+                <td><input type="text" name="username" /></td>
+            </tr>
+            <tr>
+                <td>Choose Password</td>
+                <td><input type="password" name="password" id="pw1"/></td>
+            </tr>
+            <tr>
+                <td>Retype Password</td>
+                <td><input type="password" name="password2" id="pw2"/></td>
+            </tr>
+            <tr>
+                <td>Your code</td>
+                <td><input type="text" name="code"/></td>
+            </tr>
+            <tr>
+                <td><input type="submit" vaue="login"/></td>
+            </tr>
+        </table>
+    </form>
+
+}

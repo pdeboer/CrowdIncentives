@@ -3,15 +3,18 @@
 # ~~~~
 
 # Home page
-GET         /                           controllers.Application.index
-POST        /login                      controllers.Login.login
-GET         /login                      controllers.Login.login
+GET         /                                 controllers.Application.index
 
-GET         /global                     controllers.Global.list
-GET         /global/create                 controllers.Global.create()
-GET         /global/edit/:global                 controllers.Global.edit(global:Long)
-POST        /global/save/:global  controllers.Global.save(global:Long)
-GET         /global/show/:global        controllers.Global.show(global:Long)
+POST        /login                            controllers.Login.login
+GET         /login                            controllers.Login.login
+POST        /register                         controllers.Login.register
+GET         /register                   controllers.Login.register
+
+GET         /global                           controllers.Global.list
+GET         /global/create                    controllers.Global.create()
+GET         /global/edit/:global              controllers.Global.edit(global:Long)
+POST        /global/save/:global              controllers.Global.save(global:Long)
+GET         /global/show/:global              controllers.Global.show(global:Long)
 
 
 GET         /part/:template                   controllers.Part.list(template:Long)
@@ -22,4 +25,4 @@ GET         /part/:template/show/:part        controllers.Part.show(template:Lon
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file               controllers.Assets.at(path="/public", file)
+GET         /assets/*file                     controllers.Assets.at(path="/public", file)

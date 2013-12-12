@@ -28,4 +28,23 @@ object Login extends Controller {
         else NotFound(views.html.login("Login not successful"))
       }
   }
+
+  def register() = Action {
+    implicit request =>
+      val map = request.body.asFormUrlEncoded.getOrElse(null)
+      if (map == null) {
+        Ok(views.html.register(""))
+      } else {
+        val user = map.get("username").get.headOption.getOrElse(null)
+        val pw = map.get("password").get.headOption.getOrElse(null)
+        val code = map.get("code").get.headOption.getOrElse(null)
+
+        val userDAL: UserDAL = new UserDAL()
+        if (userDAL.register(user, pw, code)) {
+          Redirect("/").withSession("user" -> userDAL.checkLogin(user, pw).toString)
+        } else {
+          Ok(views.html.register("Registration not successful. Either your code is invalid/already used or your username is not available any more."))
+        }
+      }
+  }
 }
