@@ -55,8 +55,8 @@ class StoryDAL(val roundId: Long) {
             ORDER BY tp.id ASC
           """
         ).on('round -> roundId, 'global -> globalId)().map(r =>
-          StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"),
-            author = User(r[Long]("user_id"), r[String]("username")),
+          StoryPart(r[Long]("part.id"), r[String]("part.name"), r[String]("part.body"), r[Date]("part.create_date"), r[Date]("part.last_modification"),
+            author = User(r[Long]("part.user_id"), r[String]("users.username")),
             template = TemplatePart(r[Long]("template_part.id"), r[String]("template_part.description"), r[String]("template_part.before_text"), r[String]("template_part.after_text")))
           )
 

@@ -70,3 +70,7 @@ table.list {
 .part_content {
     white-space: pre-line;
 }
+
+.part_name {
+    font-weight: bold;
+}

@@ -14,6 +14,8 @@
 
     <h2>Your integrated story</h2>
     <form action="/global/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
+        <p><input type="submit" value="save" /></p>
+
         Name: <input type="text" name="name" value="@global.name" />
         @for(p <- templateParts) {
             <p class="before">@p.beforeText</p>
@@ -60,7 +62,7 @@
             <p class="after">@p.afterText</p>
 
         }
-        <input type="submit" value="save" />
+        <p><input type="submit" value="save" /></p>
     </form>
 
     <p><a href="/global">back to overview</a></p>
