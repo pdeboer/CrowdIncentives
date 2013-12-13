@@ -1,18 +1,18 @@
 package controllers
 
-import play.api._
 import play.api.mvc._
 import controllers.dal.{StoryDAL, TemplateDAL}
-import java.text.SimpleDateFormat
 import java.util.Date
-import controllers.utils.Config
-import utils.U
+import controllers.utils.{U, Config}
 import scala.collection.mutable
+import controllers.utils
 
 object Application extends Controller {
   def index = Action {
     implicit request =>
-      if (session.get("user").isEmpty)
+      if(utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
+        Redirect("/wait")
+      } else if (session.get("user").isEmpty)
         Redirect("/login")
       else {
         Redirect("/global")
@@ -25,6 +25,13 @@ object Application extends Controller {
 case class User(id: Long, name: String, round: Long = -1L)
 
 case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "")
+
+case class FromTo(from:Date, to:Date) {
+  def fromFormatted = Config.sdf.format(from)
+  def toFormatted = Config.sdf.format(to)
+  def isNow = new Date().compareTo(from) >= 0 && new Date().compareTo(to) <= 0
+  def minutesLeft = (from.getTime - new Date().getTime) / 60000
+}
 
 case class IntegratedStory(id: Long, name: String, createDate: Date, lastModification: Date, author: User = null, var parts: List[StoryPart] = null) {
   def modificationDateFormatted = Config.sdf.format(lastModification)

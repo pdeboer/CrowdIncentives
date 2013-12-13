@@ -1,0 +1,18 @@
+@(fromTo: FromTo)
+
+@main("Welcome to CrowdIncentive") {
+    <h2>@fromTo.minutesLeft minutes left until the next round starts</h2>
+    The next round will take place from <strong>@fromTo.fromFormatted</strong> to <strong>@fromTo.toFormatted</strong>
+
+    @if(fromTo.isNow) {
+        <script type="text/javascript">location.href='/';</script>
+        <h1>The window is open, click <a href="/">here</a></h1>
+    }else{
+        <script type="text/javascript">
+            //refresh every 10 seconds
+            window.setTimeout(function() {location.reload();}, 10000);
+        </script>
+    }
+
+
+}

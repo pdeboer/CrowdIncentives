@@ -2,8 +2,9 @@ package controllers.dal
 
 import anorm._
 import play.api.db.DB
-import controllers.User
+import controllers.{FromTo, User}
 import play.api.Play.current
+import java.util.Date
 
 /**
  * @author pdeboer
@@ -40,7 +41,7 @@ class UserDAL {
           val round = roundForCode.head.apply[Long]("round_id")
 
           val i: Option[Long] = SQL("INSERT INTO users (username, password, round, code) VALUES({username}, {pw}, {round}, {code})")
-            .on('username -> name, 'pw -> password, 'round -> round, 'code->code)
+            .on('username -> name, 'pw -> password, 'round -> round, 'code -> code)
             .executeInsert()
           !i.isEmpty
         }
@@ -53,6 +54,21 @@ class UserDAL {
         val u = SQL("SELECT id, username, round FROM users WHERE id={id}").on('id -> id)().headOption
 
         if (u.isEmpty) null else User(u.get.apply[Long]("id"), u.get.apply[String]("username"), u.get.apply[Long]("round"))
+    }
+  }
+
+  def userRoundTimeframe(usr: User) = {
+    DB.withConnection {
+      implicit c =>
+        val userId = if (usr == null) -1L else usr.id
+
+        val query: String = if (userId >= 0)
+          "SELECT fromTime, toTime FROM users u INNER JOIN round r ON u.round = r.id WHERE u.id={id}"
+        else "SELECT MAX(fromTime) as fromTime, MAX(toTime) as toTime FROM round"
+
+        val u = SQL(query).on('id -> userId)().headOption
+
+        if (u.isEmpty) null else FromTo(u.get.apply[Date]("fromTime"), u.get.apply[Date]("toTime"))
     }
   }
 }

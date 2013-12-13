@@ -8,7 +8,7 @@ GET         /                                 controllers.Application.index
 POST        /login                            controllers.Login.login
 GET         /login                            controllers.Login.login
 POST        /register                         controllers.Login.register
-GET         /register                   controllers.Login.register
+GET         /register                         controllers.Login.register
 
 GET         /global                           controllers.Global.list
 GET         /global/create                    controllers.Global.create()
@@ -22,6 +22,8 @@ GET         /part/:template/create            controllers.Part.create(template:L
 GET         /part/:template/edit/:part        controllers.Part.edit(template:Long, part:Long)
 POST        /part/:template/save/:part        controllers.Part.save(template:Long, part:Long)
 GET         /part/:template/show/:part        controllers.Part.show(template:Long, part:Long)
+
+GET         /wait                             controllers.Login.waitingroom()
 
 
 # Map static resources from the /public folder to the /assets URL path

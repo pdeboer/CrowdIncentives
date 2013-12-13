@@ -1,7 +1,7 @@
 package controllers.utils
 
 import controllers.{TemplatePart, User}
-import controllers.dal.{StoryDAL, TemplateDAL}
+import controllers.dal.{UserDAL, StoryDAL, TemplateDAL}
 
 /**
  * @author pdeboer
@@ -19,4 +19,6 @@ object Security {
 
   def checkUserAllowedToEditGlobal(u: User, globalId: Long) =
     new StoryDAL(u.round).getIntegratedStory(globalId).author.id == u.id
+
+  def checkIfRedirectToWaitingRoom(u:User) = !new UserDAL().userRoundTimeframe(u).isNow
 }
