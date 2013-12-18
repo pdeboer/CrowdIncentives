@@ -1,4 +1,4 @@
-@(index:IndexData)(content:Html =Html(""))
+@(index: IndexData)(content: Html = Html(""))
 
 
 @main("Welcome to CrowdIncentive") {
@@ -6,14 +6,15 @@
     <h1>Welcome @index.user.name</h1>
 
     <div class="menu">
-        <a href="/global">Global Proposals</a>
+        <a href="/">Home</a>
+        <a href="/global">Complete Stories</a>
         @for(p <- index.templateParts) {
             <a hreF="/part/@p.id">@p.name</a>
         }
     </div>
 
     <div class="content">
-        @content
+    @content
     </div>
 
 }

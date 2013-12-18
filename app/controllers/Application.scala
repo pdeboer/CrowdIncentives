@@ -5,7 +5,6 @@ import controllers.dal.{StoryDAL, TemplateDAL}
 import java.util.Date
 import controllers.utils.{U, Config}
 import scala.collection.mutable
-import controllers.utils
 
 object Application extends Controller {
   def index = Action {
@@ -15,7 +14,7 @@ object Application extends Controller {
       } else if (session.get("user").isEmpty)
         Redirect("/login")
       else {
-        Redirect("/global")
+        Ok(views.html.home(IndexData(U.user(session))))
       }
   }
 }
