@@ -35,6 +35,11 @@ a:hover {
     height:500px;
 }
 
+p.alone {
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
 .author {
     background-color:#eee;
     padding:3px;
