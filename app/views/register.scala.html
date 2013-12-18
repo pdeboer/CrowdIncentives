@@ -6,25 +6,40 @@
     <p style="color : #900">@message</p>
 
     <script type="text/javascript">
-        function formSubmit() {
-        var pw1 = document.getElementById('pw1' ).value;
-        var pw2 = document.getElementById('pw2' ).value;
+    function formSubmit ( ) {
+    var pw1 = document.getElementById ( 'pw1' ).value ;
+    var pw2 = document.getElementById ( 'pw2' ).value ;
 
-        var ok = pw1 == pw2;
-            if(!ok) alert("Your passwords dont match");
-            return ok;
-        }
+    var message = "";
+
+    var ok = pw1 == pw2 ;
+    if ( ! ok ) message += "Your passwords dont match\n" ;
+
+    if ( pw1.length < 8 ) {
+        message += "Your password needs to be at least 8 characters \n" ;
+        ok = false ;
+    }
+
+    if ( document.getElementById ( "username" ).value.length < 6 ) {
+        message += "Your username should be at least 6 characters\n" ;
+        ok = false ;
+    }
+
+    if(!ok) alert(message);
+
+    return ok ;
+    }
     </script>
 
-    <form action="/register" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return formSubmit()">
+    <form action="/register" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return formSubmit ( )">
         <table>
             <tr>
                 <td>Choose Username</td>
-                <td><input type="text" name="username" /></td>
+                <td><input type="text" name="username" id="username"/> <i>at least 6 characters</i> </td>
             </tr>
             <tr>
                 <td>Choose Password</td>
-                <td><input type="password" name="password" id="pw1"/></td>
+                <td><input type="password" name="password" id="pw1"/>  <i>at least 8 characters</i> </td>
             </tr>
             <tr>
                 <td>Retype Password</td>
