@@ -9,7 +9,7 @@
     function formSubmit ( ) {
     var pw1 = document.getElementById ( 'pw1' ).value ;
     var pw2 = document.getElementById ( 'pw2' ).value ;
-
+    var username = document.getElementById("username" ).value;
     var message = "";
 
     var ok = pw1 == pw2 ;
@@ -20,8 +20,13 @@
         ok = false ;
     }
 
-    if ( document.getElementById ( "username" ).value.length < 6 ) {
+    if ( username.length < 6 ) {
         message += "Your username should be at least 6 characters\n" ;
+        ok = false ;
+    }
+
+    if ( username == document.getElementById("code" ).value ) {
+        message += "Please choose another username than your code (people might address questions to you with that name) \n" ;
         ok = false ;
     }
 
@@ -35,7 +40,7 @@
         <table>
             <tr>
                 <td>Choose Username</td>
-                <td><input type="text" name="username" id="username"/> <i>at least 6 characters</i> </td>
+                <td><input type="text" name="username" id="username"/> <i>at least 6 characters. People might address questions to you with that name, please pick one you feel comfortable with. </i> </td>
             </tr>
             <tr>
                 <td>Choose Password</td>
@@ -47,7 +52,7 @@
             </tr>
             <tr>
                 <td>Your code</td>
-                <td><input type="text" name="code"/></td>
+                <td><input type="text" name="code" id="code"/></td>
             </tr>
             <tr>
                 <td><input type="submit" vaue="login"/></td>
