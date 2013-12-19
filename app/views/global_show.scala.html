@@ -8,9 +8,8 @@
     @if(global.parts.size > 0) {
         @for(p <- global.parts) {
             <p class="before">@p.template.beforeText</p>
-            <p class="part_name">@p.name</p>
             <p class="part_content">@p.content</p>
-            <p class="after">@p.template.beforeText</p>
+            <p class="after">@p.template.afterText</p>
         }
     }else{
         No data yet.
