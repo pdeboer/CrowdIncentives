@@ -38,6 +38,7 @@ case class FromTo(from: Date, to: Date) {
 
 case class IntegratedStory(id: Long, name: String, createDate: Date, lastModification: Date, author: User = null, var parts: List[StoryPart] = null) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
+  def creationDateFormatted = Config.sdf.format(createDate)
 
   private var _partForTemplateCache = new mutable.HashMap[Long, StoryPart]()
 

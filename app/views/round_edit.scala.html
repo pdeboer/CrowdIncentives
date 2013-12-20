@@ -1,4 +1,4 @@
-@(round: Round, indexData: IndexData)
+@(round: Round, isInsert:Boolean=false, indexData: IndexData)
 
 @index(indexData) {
     <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
@@ -27,6 +27,12 @@
                 <th><a href="/admin" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
                 <td><input type="submit" value="save" /></td>
             </tr>
+            @if(isInsert) {
+                <tr>
+                    <th>round of which stories should be copied from</th>
+                    <td><input type="text" name="prevround" /></td>
+                </tr>
+            }
         </table>
     </form>
 }

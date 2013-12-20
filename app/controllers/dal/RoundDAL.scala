@@ -47,19 +47,33 @@ class RoundDAL() {
     }
   }
 
-  def insertRound(round: Round) = {
+  def insertRound(round: Round, prevRoundID: String = null) = {
     DB.withConnection {
       implicit c =>
 
         val key: Option[Long] = SQL(
-        """
+          """
             INSERT INTO round (template_id, description, fromTime, toTime, notes)
             VALUES ({template}, {description}, {from}, {to}, {notes})
-        """).on('template -> round.templateId, 'description -> round.description,
-          'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id)
-        .executeInsert()
+          """).on('template -> round.templateId, 'description -> round.description,
+            'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id)
+          .executeInsert()
 
-      key.get
+        val created = key.get
+
+        if (prevRoundID != null) {
+          //transition codes to next round
+          SQL("update codes set round_id={next} where code not in (select code from users)").on('next->created).executeUpdate()
+
+          //copy parts
+          val old = new StoryDAL(prevRoundID.toLong)
+          val fresh = new StoryDAL(created)
+
+          //val template = new TemplateDAL()
+
+        }
+
+        created
     }
   }
 

@@ -10,6 +10,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Author</th>
+                    <th>Creation date</th>
                     <th>Last modification</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -17,6 +18,7 @@
                     <tr class="bg@(counter.incrementAndGet() % 2)">
                         <td>@g.name</td>
                         <td>@g.author.name</td>
+                        <td>@g.creationDateFormatted</td>
                         <td>@g.modificationDateFormatted</td>
                         <td>
                         @if(g.author.id == indexData.user.id) {

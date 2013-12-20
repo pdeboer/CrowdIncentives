@@ -29,7 +29,7 @@ object Admin extends Controller {
         Forbidden(views.html.error(IndexData(u)))
       } else {
         val roundDAL = new RoundDAL()
-        Ok(views.html.round_edit(roundDAL.getRound(roundId), IndexData(u)))
+        Ok(views.html.round_edit(roundDAL.getRound(roundId), false, IndexData(u)))
       }
   }
 
@@ -40,7 +40,7 @@ object Admin extends Controller {
       if (!utils.Security.checkIsAdmin(u)) {
         Forbidden(views.html.error(IndexData(u)))
       } else {
-        Ok(views.html.round_edit(Round(), IndexData(u)))
+        Ok(views.html.round_edit(Round(), isInsert=true, IndexData(u)))
       }
   }
 
@@ -71,8 +71,9 @@ object Admin extends Controller {
           roundDAL.updateRound(newRound)
           Redirect("/admin/edit/" + roundId)
         } else {
+          val prevRoundId = map.get("prevround").get.head
           //insert
-          val newId: Long = roundDAL.insertRound(newRound)
+          val newId: Long = roundDAL.insertRound(newRound, prevRoundId)
           Redirect("/admin/edit/" + newId)
         }
       }
