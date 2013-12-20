@@ -54,9 +54,9 @@ class UserDAL {
   def getUser(id: Int): User = {
     DB.withConnection {
       implicit c =>
-        val u = SQL("SELECT id, username, round FROM users WHERE id={id}").on('id -> id)().headOption
+        val u = SQL("SELECT id, username, round, isAdmin FROM users WHERE id={id}").on('id -> id)().headOption
 
-        if (u.isEmpty) null else User(u.get.apply[Long]("id"), u.get.apply[String]("username"), u.get.apply[Long]("round"))
+        if (u.isEmpty) null else User(u.get.apply[Long]("id"), u.get.apply[String]("username"), u.get.apply[Long]("round"), u.get.apply[Int]("isAdmin") == 1)
     }
   }
 

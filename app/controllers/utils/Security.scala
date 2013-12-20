@@ -21,4 +21,6 @@ object Security {
     new StoryDAL(u.round).getIntegratedStory(globalId).author.id == u.id
 
   def checkIfRedirectToWaitingRoom(u:User) = !new UserDAL().userRoundTimeframe(u).isNow
+
+  def checkIsAdmin(u:User) = u.isAdmin
 }

@@ -9,7 +9,7 @@ import scala.collection.mutable
 object Application extends Controller {
   def index = Action {
     implicit request =>
-      if(utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
+      if (utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
         Redirect("/wait")
       } else if (session.get("user").isEmpty)
         Redirect("/login")
@@ -21,14 +21,17 @@ object Application extends Controller {
 
 //need to define all model classes here, otherwise invisible to views. that's ugly
 
-case class User(id: Long, name: String, round: Long = -1L)
+case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false)
 
 case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "")
 
-case class FromTo(from:Date, to:Date) {
+case class FromTo(from: Date, to: Date) {
   def fromFormatted = Config.sdf.format(from)
+
   def toFormatted = Config.sdf.format(to)
+
   def isNow = new Date().compareTo(from) >= 0 && new Date().compareTo(to) <= 0
+
   def minutesLeft = (from.getTime - new Date().getTime) / 60000
 }
 
@@ -84,9 +87,11 @@ class Counter(var init: Int = 0) {
   def get() = init
 }
 
-case class Setting(key:String, value:String)
+case class Setting(key: String, value: String)
 
 object Settings extends Enumeration {
   type Settings = Value
   val ADMINPW = Value
 }
+
+case class Round(var id:Int=-1, startTime:Date, endTime:Date, templateId:Int, description:String="", notes:String="")

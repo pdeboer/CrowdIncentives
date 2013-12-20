@@ -1,0 +1,28 @@
+@(data: List[Round], indexData: IndexData, counter: Counter = new Counter())
+
+    @index(indexData) {
+        <a href="/admin/create">Create Round</a>
+
+        @if(data.size > 0) {
+            <table class="list">
+                <tr>
+                    <th>Name</th>
+                    <th>Template</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>&nbsp;</th>
+                </tr>
+                @for(r <- data) {
+                    <tr class="bg@(counter.incrementAndGet() % 2)">
+                        <td>@r.description</td>
+                        <td>@r.templateId</td>
+                        <td>@r.startTime</td>
+                        <td>@r.endTime</td>
+                        <td><a href="/admin/edit/@r.id">edit</a></td>
+                    </tr>
+                }
+            </table>
+        }else{
+            No rounds yet
+        }
+    }
