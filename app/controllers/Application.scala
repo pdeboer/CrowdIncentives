@@ -94,4 +94,4 @@ object Settings extends Enumeration {
   val ADMINPW = Value
 }
 
-case class Round(var id:Int=-1, startTime:Date, endTime:Date, templateId:Int, description:String="", notes:String="")
+case class Round(var id:Long = -1L, startTime:Date, endTime:Date, templateId:Long, description:String="", notes:String="")

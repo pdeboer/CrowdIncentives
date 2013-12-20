@@ -25,6 +25,7 @@ GET         /part/:template/show/:part        controllers.Part.show(template:Lon
 
 GET         /wait                             controllers.Login.waitingroom()
 
+GET         /admin                            controllers.Admin.listRounds()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.at(path="/public", file)

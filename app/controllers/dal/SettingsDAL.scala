@@ -29,6 +29,6 @@ class SettingsDAL() {
         SQL("DELETE FROM settings WHERE key = {key}").on('key -> setting.key).executeUpdate()
 
         SQL("INSERT INTO settings (key, value) VALUES ({key}, {value})").on('key -> setting.key, 'value -> setting.value).executeInsert()
-    })
+    }
   }
 }

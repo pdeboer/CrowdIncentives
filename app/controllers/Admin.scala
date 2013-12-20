@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import controllers.utils.{Security, U}
-import controllers.dal.{TemplateDAL, StoryDAL}
+import controllers.dal.{RoundDAL, TemplateDAL, StoryDAL}
 import java.util.Date
 
 /**
@@ -16,8 +16,8 @@ object Admin extends Controller {
       if (utils.Security.checkIsAdmin(u)) {
         Redirect("/wait")
       } else {
-        val storyDAL = new StoryDAL(u.round)
-        Ok(views.html.global(storyDAL.getIntegratedStories(),
+        val roundDAL = new RoundDAL()
+        Ok(views.html.admin(roundDAL.getRounds(),
           IndexData(u)))
       }
   }
