@@ -83,3 +83,10 @@ class Counter(var init: Int = 0) {
 
   def get() = init
 }
+
+case class Setting(key:String, value:String)
+
+object Settings extends Enumeration {
+  type Settings = Value
+  val ADMINPW = Value
+}
