@@ -72,9 +72,10 @@ class StoryDAL(val roundId: Long) {
         val id:Option[Long] = SQL(
           """
             INSERT INTO global (name, create_date, last_modification, user_id, round_id)
-            VALUES ({name}, NOW(), NOW(), {user}, {round})
+            VALUES ({name}, {create}, {mod}, {user}, {round})
           """
-        ).on('name -> newStory.name, 'user -> newStory.author.id, 'round -> roundId)
+        ).on('name -> newStory.name, 'user -> newStory.author.id, 'round -> roundId,
+          'create->newStory.createDate, 'mod->newStory.lastModification)
           .executeInsert()
 
         //save all associations
@@ -148,10 +149,10 @@ class StoryDAL(val roundId: Long) {
           """
             INSERT INTO part
               (name, body, create_date, last_modification, user_id, template_part_id, round_id)
-            VALUES ({name}, {body}, NOW(), NOW(), {author}, {templatePart}, {round})
+            VALUES ({name}, {body},{create}, {mod}, {author}, {templatePart}, {round})
           """
         ).on('name -> newPart.name, 'body -> newPart.content,
-            'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId)
+            'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId, 'create->newPart.createDate, 'mod->newPart.lastModification)
           .executeInsert()
 
         id

@@ -63,13 +63,37 @@ class RoundDAL() {
 
         if (prevRoundID != null) {
           //transition codes to next round
-          SQL("update codes set round_id={next} where code not in (select code from users)").on('next->created).executeUpdate()
+          SQL("update codes set round_id={next} where code not in (select code from users)").on('next -> created).executeUpdate()
 
-          //copy parts
           val old = new StoryDAL(prevRoundID.toLong)
           val fresh = new StoryDAL(created)
 
-          //val template = new TemplateDAL()
+          val templateOld = new TemplateDAL(prevRoundID.toLong)
+          if (templateOld.getTemplateId() == round.templateId) {
+            /**
+             * copy parts first
+             */
+            //maps old part id to new ones
+            var partMapping = collection.mutable.HashMap[Long, Long]()
+            templateOld.getParts().foreach(templatePart => {
+              val parts = old.getParts(templatePart.id)
+              parts.foreach(storyPart => {
+                val newKey = fresh.insertPart(templatePart.id, storyPart).get
+                partMapping += storyPart.id -> newKey
+              })
+            })
+
+            //copy integrated stories
+            val integratedStories = old.getIntegratedStories()
+            integratedStories.foreach(s => {
+              val story = old.getIntegratedStory(s.id)
+
+              val replacedStoryParts = story.parts.map(p => fresh.getPart(partMapping(p.id))).toList
+
+              story.parts = replacedStoryParts
+              fresh.insertIntegratedStory(story)
+            })
+          }
 
         }
 
