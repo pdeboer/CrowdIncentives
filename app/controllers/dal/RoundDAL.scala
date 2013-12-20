@@ -31,6 +31,13 @@ class RoundDAL() {
     }
   }
 
+  def updateRound(round:Round) {
+    DB.withConnection {
+      implicit c =>
+
+    }
+  }
+
   def getRounds(): List[Round] = {
     DB.withConnection {
       implicit c =>

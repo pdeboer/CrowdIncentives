@@ -1,0 +1,32 @@
+@(round: Round, indexData: IndexData)
+
+@index(indexData) {
+    <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
+        <table>
+            <tr>
+                <th>Description</th>
+                <td><input type="text" name="description" value="@round.name" /></td>
+            </tr>
+            <tr>
+                <th>Start Date/Time</th>
+                <td><input type="text" name="startTime" value="@round.startTime" /></td>
+            </tr>
+            <tr>
+                <th>End Date/Time</th>
+                <td><input type="text" name="endTime" value="@round.endTime" /></td>
+            </tr>
+            <tr>
+                <th>Template ID</th>
+                <td><input type="text" name="templateId" value="@round.templateId" /></td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td><textarea name="notes">@round.body</textarea></td>
+            </tr>
+            <tr>
+                <th><a href="/admin" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
+                <td><input type="submit" value="save" /></td>
+            </tr>
+        </table>
+    </form>
+}

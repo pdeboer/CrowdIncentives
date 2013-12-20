@@ -14,7 +14,7 @@ object Admin extends Controller {
     implicit request =>
       val u = U.user(session)
       if (!utils.Security.checkIsAdmin(u)) {
-        Redirect("/")
+        Forbidden(views.html.error(IndexData(u)))
       } else {
         val roundDAL = new RoundDAL()
         Ok(views.html.admin(roundDAL.getRounds(),
@@ -22,37 +22,55 @@ object Admin extends Controller {
       }
   }
 
-
-  def save(globalId: Long) = Action {
+  def edit(roundId: Long) = Action {
     implicit request =>
-      if (utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
-        Redirect("/wait")
+      val u = U.user(session)
+      if (!utils.Security.checkIsAdmin(u)) {
+        Forbidden(views.html.error(IndexData(u)))
+      } else {
+        val roundDAL = new RoundDAL()
+        Ok(views.html.round_edit(roundDAL.getRound(roundId), IndexData(u)))
+      }
+  }
+
+
+  def create() = Action {
+    implicit request =>
+      implicit request =>
+        val u = U.user(session)
+        if (!utils.Security.checkIsAdmin(u)) {
+          Forbidden(views.html.error(IndexData(u)))
+        } else {
+          Ok(views.html.round_edit(Round(), IndexData(u)))
+        }
+  }
+
+  def save(roundId: Long) = Action {
+    implicit request =>
+      val u = U.user(session)
+      if (!utils.Security.checkIsAdmin(u)) {
+        Forbidden(views.html.error(IndexData(u)))
       } else {
         //dal init
-        val u = U.user(session)
-        val storyDAL = new StoryDAL(u.round)
-        val templateDAL = new TemplateDAL(u.round)
+        val roundDAL = new RoundDAL()
 
         //form handling
         val map = request.body.asFormUrlEncoded.get
-        val name = map.get("name").get.head
+        val description = map.get("description").get.head
+        val startTime = map.get("startTime").get.head
+        val endTime = map.get("endTime").get.head
+        val templateId = map.get("templateId").get.head
+        val notes = map.get("notes").get.head
 
-        val associations = templateDAL.getParts().map(p => {
-          val idOp = map.get("part" + p.id).getOrElse(List()).headOption
-          val id = idOp.getOrElse(null)
-          if (id == null) null else storyDAL.getPart(id.toLong)
-        }).filterNot(_ == null)
+        val startTimeParsed = Date.parse(startTime)
+        val endTimeParsed = Date.parse(endTime)
+        val templateIdParsed = templateId.toLong
 
-        val global = IntegratedStory(globalId, name, new Date(), new Date(), u, associations)
+        val newRound = Round(roundId, startTimeParsed, endTimeParsed, templateIdParsed, description, notes)
 
-        if (globalId > 0) {
-          //update
-          if (!Security.checkUserAllowedToEditGlobal(u, globalId)) {
-            Forbidden(views.html.error(IndexData(u)))
-          } else {
-            storyDAL.updateIntegratedStory(global)
-            Redirect("/global/edit/" + globalId)
-          }
+        if (roundId > 0) {
+          storyDAL.updateIntegratedStory(global)
+          Redirect("/global/edit/" + roundId)
         } else {
           //insert
           val newId: Long = storyDAL.insertIntegratedStory(global)
@@ -61,48 +79,4 @@ object Admin extends Controller {
       }
   }
 
-  def create() = Action {
-    implicit request =>
-      if (utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
-        Redirect("/wait")
-      } else {
-        val u = U.user(session)
-        val templateDAL = new TemplateDAL(u.round)
-
-        Ok(views.html.global_edit(IntegratedStory.empty, templateDAL.getParts(),
-          IndexData(u)))
-      }
-  }
-
-  def edit(globalId: Long) = Action {
-    implicit request =>
-      if (utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
-        Redirect("/wait")
-      } else {
-        val u = U.user(session)
-        val storyDAL = new StoryDAL(u.round)
-        val templateDAL = new TemplateDAL(u.round)
-
-        if (!Security.checkUserAllowedToEditGlobal(u, globalId)) {
-          Forbidden(views.html.error(IndexData(u)))
-        } else {
-          Ok(views.html.global_edit(storyDAL.getIntegratedStory(globalId), templateDAL.getParts(), IndexData(u)))
-        }
-      }
-  }
-
-  def show(globalId: Long) = Action {
-    implicit request =>
-      if (utils.Security.checkIfRedirectToWaitingRoom(U.user(session))) {
-        Redirect("/wait")
-      } else {
-        val u = U.user(session)
-        val storyDAL = new StoryDAL(u.round)
-        val global = storyDAL.getIntegratedStory(globalId)
-        val templateDAL = new TemplateDAL(u.round)
-
-        Ok(views.html.global_show(global, templateDAL.getParts(),
-          IndexData(u)))
-      }
-  }
 }
