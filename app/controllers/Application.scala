@@ -5,6 +5,7 @@ import controllers.dal.{StoryDAL, TemplateDAL}
 import java.util.Date
 import controllers.utils.{U, Config}
 import scala.collection.mutable
+import java.text.SimpleDateFormat
 
 object Application extends Controller {
   def index = Action {
@@ -94,4 +95,9 @@ object Settings extends Enumeration {
   val ADMINPW = Value
 }
 
-case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = new Date(), templateId:Long = 2, description:String="", notes:String="")
+case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = new Date(), templateId:Long = 2, description:String="", notes:String="") {
+  val sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+
+  def startTimeFormatted = sdf.format(startTime)
+  def endTimeFormatted = sdf.format(endTime)
+}

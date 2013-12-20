@@ -36,13 +36,12 @@ object Admin extends Controller {
 
   def create() = Action {
     implicit request =>
-      implicit request =>
-        val u = U.user(session)
-        if (!utils.Security.checkIsAdmin(u)) {
-          Forbidden(views.html.error(IndexData(u)))
-        } else {
-          Ok(views.html.round_edit(Round(), IndexData(u)))
-        }
+      val u = U.user(session)
+      if (!utils.Security.checkIsAdmin(u)) {
+        Forbidden(views.html.error(IndexData(u)))
+      } else {
+        Ok(views.html.round_edit(Round(), IndexData(u)))
+      }
   }
 
   def save(roundId: Long) = Action {
@@ -62,19 +61,19 @@ object Admin extends Controller {
         val templateId = map.get("templateId").get.head
         val notes = map.get("notes").get.head
 
-        val startTimeParsed = Date.parse(startTime)
-        val endTimeParsed = Date.parse(endTime)
+        val startTimeParsed = Round().sdf.parse(startTime)
+        val endTimeParsed = Round().sdf.parse(endTime)
         val templateIdParsed = templateId.toLong
 
         val newRound = Round(roundId, startTimeParsed, endTimeParsed, templateIdParsed, description, notes)
 
         if (roundId > 0) {
-          storyDAL.updateIntegratedStory(global)
-          Redirect("/global/edit/" + roundId)
+          roundDAL.updateRound(newRound)
+          Redirect("/admin/edit/" + roundId)
         } else {
           //insert
-          val newId: Long = storyDAL.insertIntegratedStory(global)
-          Redirect("/global/edit/" + newId)
+          val newId: Long = roundDAL.insertRound(newRound)
+          Redirect("/admin/edit/" + newId)
         }
       }
   }

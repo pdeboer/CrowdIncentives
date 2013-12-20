@@ -12,7 +12,7 @@ import java.util.Date
  */
 class RoundDAL() {
 
-  def getRound(roundId: Int): Round = {
+  def getRound(roundId: Long): Round = {
     DB.withConnection {
       implicit c =>
         val data = SQL(
@@ -31,10 +31,35 @@ class RoundDAL() {
     }
   }
 
-  def updateRound(round:Round) {
+  def updateRound(round: Round) {
     DB.withConnection {
       implicit c =>
 
+        SQL(
+          """
+            UPDATE round
+            SET template_id={template}, description={description},
+              fromTime={from}, toTime={to}, notes={notes}
+            WHERE id={id}
+          """).on('template -> round.templateId, 'description -> round.description,
+            'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id)
+          .executeUpdate()
+    }
+  }
+
+  def insertRound(round: Round) = {
+    DB.withConnection {
+      implicit c =>
+
+        val key: Option[Long] = SQL(
+        """
+            INSERT INTO round (template_id, description, fromTime, toTime, notes)
+            VALUES ({template}, {description}, {from}, {to}, {notes})
+        """).on('template -> round.templateId, 'description -> round.description,
+          'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id)
+        .executeInsert()
+
+      key.get
     }
   }
 

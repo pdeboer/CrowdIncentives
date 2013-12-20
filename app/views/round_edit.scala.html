@@ -5,15 +5,15 @@
         <table>
             <tr>
                 <th>Description</th>
-                <td><input type="text" name="description" value="@round.name" /></td>
+                <td><input type="text" name="description" value="@round.description" /></td>
             </tr>
             <tr>
                 <th>Start Date/Time</th>
-                <td><input type="text" name="startTime" value="@round.startTime" /></td>
+                <td><input type="text" name="startTime" value="@round.startTimeFormatted" /> <i>example: 2013-12-15 05:51:09</i></td>
             </tr>
             <tr>
                 <th>End Date/Time</th>
-                <td><input type="text" name="endTime" value="@round.endTime" /></td>
+                <td><input type="text" name="endTime" value="@round.endTimeFormatted" /> <i>example: 2013-12-15 05:51:09</i></td>
             </tr>
             <tr>
                 <th>Template ID</th>
@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <th>Notes</th>
-                <td><textarea name="notes">@round.body</textarea></td>
+                <td><textarea name="notes">@round.notes</textarea></td>
             </tr>
             <tr>
                 <th><a href="/admin" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
