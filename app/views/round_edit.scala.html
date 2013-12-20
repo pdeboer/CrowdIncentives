@@ -23,16 +23,16 @@
                 <th>Notes</th>
                 <td><textarea name="notes">@round.notes</textarea></td>
             </tr>
+            @if(isInsert) {
+                <tr>
+                    <th>round ID of which stories should be copied from</th>
+                    <td><input type="text" name="prevround" /></td>
+                </tr>
+            }
             <tr>
                 <th><a href="/admin" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
                 <td><input type="submit" value="save" /></td>
             </tr>
-            @if(isInsert) {
-                <tr>
-                    <th>round of which stories should be copied from</th>
-                    <td><input type="text" name="prevround" /></td>
-                </tr>
-            }
         </table>
     </form>
 }
