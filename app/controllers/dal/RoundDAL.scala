@@ -18,7 +18,7 @@ class RoundDAL() {
         val data = SQL(
           """
             SELECT id, template_id, description, fromTime, toTime, notes
-            FROM rounds
+            FROM round
             WHERE id = {round}
           """).on('round -> roundId)().headOption
 
@@ -26,7 +26,7 @@ class RoundDAL() {
         else Round(
           id = data.get.apply[Long]("id"),
           description = data.get.apply[Option[String]]("description").getOrElse(null),
-          notes = data.get.apply[Option[String]]("before_text").getOrElse(null),
+          notes = data.get.apply[Option[String]]("notes").getOrElse(null),
           startTime = data.get.apply[Date]("fromTime"), endTime = data.get.apply[Date]("toTime"), templateId = data.get.apply[Long]("template_id"))
     }
   }
@@ -37,12 +37,12 @@ class RoundDAL() {
         val data = SQL(
           """
             SELECT id, template_id, description, fromTime, toTime, notes
-            FROM rounds
+            FROM round
             ORDER BY id DESC
           """)().map(row => Round(
           id = row[Long]("id"),
           description = row[Option[String]]("description").getOrElse(null),
-          notes = row[Option[String]]("before_text").getOrElse(null),
+          notes = row[Option[String]]("notes").getOrElse(null),
           startTime = row[Date]("fromTime"), endTime = row[Date]("toTime"),
           templateId = row[Long]("template_id")
         ))

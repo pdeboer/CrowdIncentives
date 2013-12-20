@@ -13,8 +13,8 @@ object Admin extends Controller {
   def listRounds() = Action {
     implicit request =>
       val u = U.user(session)
-      if (utils.Security.checkIsAdmin(u)) {
-        Redirect("/wait")
+      if (!utils.Security.checkIsAdmin(u)) {
+        Redirect("/")
       } else {
         val roundDAL = new RoundDAL()
         Ok(views.html.admin(roundDAL.getRounds(),
