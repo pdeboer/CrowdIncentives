@@ -1,7 +1,7 @@
 package controllers.dal
 
 import play.api.db.DB
-import controllers.{Round, TemplatePart}
+import controllers.{Code, Round, TemplatePart}
 import anorm._
 import play.api.Play.current
 import java.util.Date
@@ -98,6 +98,20 @@ class RoundDAL() {
         }
 
         created
+    }
+  }
+
+  def getRemainingCodes():List[Code] = {
+    DB.withConnection {
+     implicit c=>
+        val data = SQL(
+          """
+            SELECT code, round_id FROM codes WHERE code NOT IN (
+              SELECT code FROM users
+            )
+          """)().map(row=>Code(row[String]("code"), row[Long]("round_id")))
+
+        data.toList
     }
   }
 

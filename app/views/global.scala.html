@@ -8,7 +8,6 @@
         @if(data.size > 0) {
             <table class="list">
                 <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Author</th>
                     <th>Creation date</th>
@@ -17,7 +16,6 @@
                 </tr>
                 @for(g <- data) {
                     <tr class="bg@(counter.incrementAndGet() % 2)">
-                        <td>@g.id</td>
                         <td>@g.name</td>
                         <td>@g.author.name</td>
                         <td>@g.creationDateFormatted</td>

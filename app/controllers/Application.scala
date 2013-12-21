@@ -102,3 +102,5 @@ case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = 
   def startTimeFormatted = sdf.format(startTime)
   def endTimeFormatted = sdf.format(endTime)
 }
+
+case class Code(code:String, round:Long)

@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import controllers.utils.{Security, U}
-import controllers.dal.{RoundDAL, TemplateDAL, StoryDAL}
+import controllers.dal.{UserDAL, RoundDAL, TemplateDAL, StoryDAL}
 import java.util.Date
 
 /**
@@ -10,14 +10,14 @@ import java.util.Date
  *         First created on 10/12/13 at 11:52
  */
 object Admin extends Controller {
-  def listRounds() = Action {
+  def index() = Action {
     implicit request =>
       val u = U.user(session)
       if (!utils.Security.checkIsAdmin(u)) {
         Forbidden(views.html.error(IndexData(u)))
       } else {
         val roundDAL = new RoundDAL()
-        Ok(views.html.admin(roundDAL.getRounds(),
+        Ok(views.html.admin(roundDAL.getRounds(), roundDAL.getRemainingCodes(),
           IndexData(u)))
       }
   }
@@ -41,6 +41,22 @@ object Admin extends Controller {
         Forbidden(views.html.error(IndexData(u)))
       } else {
         Ok(views.html.round_edit(Round(), isInsert=true, IndexData(u)))
+      }
+  }
+
+  def changeRoundOfCurrentUser() = Action {
+    implicit request =>
+      val u = U.user(session)
+      if (!utils.Security.checkIsAdmin(u)) {
+        Forbidden(views.html.error(IndexData(u)))
+      } else {
+        val map = request.body.asFormUrlEncoded.get
+        val newRound = map.get("newRound").get.head
+
+        val userDAL = new UserDAL()
+        userDAL.setUserRound(u.id, newRound.toLong)
+
+        Redirect("/admin")
       }
   }
 

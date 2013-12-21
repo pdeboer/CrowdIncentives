@@ -51,6 +51,13 @@ class UserDAL {
     }
   }
 
+  def setUserRound(userId:Long, roundId:Long) {
+    DB.withConnection {
+      implicit c=>
+        SQL("UPDATE users SET round={round} WHERE id={id}").on('round->roundId, 'id->userId).executeUpdate()
+    }
+  }
+
   def getUser(id: Int): User = {
     DB.withConnection {
       implicit c =>

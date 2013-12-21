@@ -1,11 +1,14 @@
-@(data: List[Round], indexData: IndexData, counter: Counter = new Counter())
+@(data: List[Round], codes:List[Code], indexData: IndexData, counter: Counter = new Counter())
 
     @index(indexData) {
+    <h2>Rounds</h2>
+
         <a href="/admin/create">Create Round</a>
 
         @if(data.size > 0) {
             <table class="list">
                 <tr>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Template</th>
                     <th>Start time</th>
@@ -14,6 +17,7 @@
                 </tr>
                 @for(r <- data) {
                     <tr class="bg@(counter.incrementAndGet() % 2)">
+                        <td>@r.id</td>
                         <td>@r.description</td>
                         <td>@r.templateId</td>
                         <td>@r.startTimeFormatted</td>
@@ -25,4 +29,34 @@
         }else{
             No rounds yet
         }
+
+    <h2>Change CURRENT ROUND of user that is logged in</h2>
+    <form action="/admin/changeRound" method="post" enctype="application/x-www-form-urlencoded">
+        New Round:
+            <select name="newRound">
+                @for(r<-data) {
+                    <option value="@r.id"@if(r.id == indexData.user.round){ selected="selected" }>@r.id - @r.description</option>
+                }
+            </select>
+        <input type="submit" value="save"/>
+        </form>
+
+    <h2>Available Codes</h2>
+
+    @if(codes.size > 0) {
+        <table class="list">
+            <tr>
+                <th>Code</th>
+                <th>Round</th>
+            </tr>
+            @for(c <- codes) {
+                <tr class="bg@(counter.incrementAndGet() % 2)">
+                    <td>@c.code</td>
+                    <td>@c.round</td>
+                </tr>
+            }
+        </table>
+    }else{
+        No more available codes
     }
+}
