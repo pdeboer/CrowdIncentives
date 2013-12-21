@@ -9,18 +9,18 @@ import controllers.dal.{UserDAL, StoryDAL, TemplateDAL}
  */
 object Security {
   def checkUserAccessToTemplatePart(u: User, t: TemplatePart) =
-    new TemplateDAL(u.round).getParts().exists(_.id == t.id)
+    new TemplateDAL(u.round).getParts().exists(_.id == t.id) || checkIsAdmin(u)
 
   def checkUserAllowedToEditPart(u: User, partId: Long) =
-    new StoryDAL(u.round).getPart(partId).author.id == u.id
+    new StoryDAL(u.round).getPart(partId).author.id == u.id || checkIsAdmin(u)
 
   def checkUserAllowedToViewGlobal(u: User, globalId: Long) =
-    new StoryDAL(u.round).getIntegratedStories().exists(_.id == globalId)
+    new StoryDAL(u.round).getIntegratedStories().exists(_.id == globalId) || checkIsAdmin(u)
 
   def checkUserAllowedToEditGlobal(u: User, globalId: Long) =
-    new StoryDAL(u.round).getIntegratedStory(globalId).author.id == u.id
+    new StoryDAL(u.round).getIntegratedStory(globalId).author.id == u.id || checkIsAdmin(u)
 
-  def checkIfRedirectToWaitingRoom(u:User) = !new UserDAL().userRoundTimeframe(u).isNow
+  def checkIfRedirectToWaitingRoom(u:User) = !new UserDAL().userRoundTimeframe(u).isNow && !checkIsAdmin(u)
 
   def checkIsAdmin(u:User) = u.isAdmin
 }
