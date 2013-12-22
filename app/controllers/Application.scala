@@ -22,7 +22,7 @@ object Application extends Controller {
 
 //need to define all model classes here, otherwise invisible to views. that's ugly
 
-case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false)
+case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false, code:String="")
 
 case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "")
 

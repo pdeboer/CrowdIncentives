@@ -3,7 +3,11 @@
 @index(indexData) {
     <h2>@template.name: @part.name</h2>
     <p class="author">Part authored by <strong>@part.author.name</strong>, last modified on
-        <strong>@part.modificationDateFormatted</strong></p>
+        <strong>@part.modificationDateFormatted</strong>
+    @if(indexData.user.isAdmin) {
+        , code of author <strong>@part.author.code</strong>
+    }
+    </p>
 
     <p class="before">@template.beforeText</p>
 

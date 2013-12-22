@@ -13,6 +13,7 @@
     </script>
 
     <h2>Your integrated story</h2>
+    @if(indexData.user.isAdmin) { Author: @global.author.name (@global.author.code) }
     <form action="/global/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
         <p><input type="submit" value="save" /></p>
 
@@ -21,7 +22,9 @@
             <p class="before">@p.beforeText</p>
 
             @if(global.partForTemplate(p.id) != null) {
-                <p class="part_name">@global.partForTemplate(p.id).name</p>
+                <p class="part_name">
+                    <i>@global.partForTemplate(p.id).author.name @if(indexData.user.isAdmin) { ( @global.partForTemplate(p.id).author.code ) }</i>:
+                    @global.partForTemplate(p.id).name</p>
                 <p class="part_content">@global.partForTemplate(p.id).content</p>
                 <a onclick="toggle ( 'part@p.id' )">
                     CHANGE </a>
