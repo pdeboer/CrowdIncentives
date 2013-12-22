@@ -76,12 +76,13 @@ object Admin extends Controller {
         val endTime = map.get("endTime").get.head
         val templateId = map.get("templateId").get.head
         val notes = map.get("notes").get.head
+        val hometext = map.get("hometext").get.head
 
         val startTimeParsed = Round().sdf.parse(startTime)
         val endTimeParsed = Round().sdf.parse(endTime)
         val templateIdParsed = templateId.toLong
 
-        val newRound = Round(roundId, startTimeParsed, endTimeParsed, templateIdParsed, description, notes)
+        val newRound = Round(roundId, startTimeParsed, endTimeParsed, templateIdParsed, description, notes, home = hometext)
 
         if (roundId > 0) {
           roundDAL.updateRound(newRound)

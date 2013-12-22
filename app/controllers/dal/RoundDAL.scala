@@ -17,7 +17,7 @@ class RoundDAL() {
       implicit c =>
         val data = SQL(
           """
-            SELECT id, template_id, description, fromTime, toTime, notes
+            SELECT id, template_id, description, fromTime, toTime, notes, home
             FROM round
             WHERE id = {round}
           """).on('round -> roundId)().headOption
@@ -25,8 +25,9 @@ class RoundDAL() {
         if (data.isEmpty) null
         else Round(
           id = data.get.apply[Long]("id"),
-          description = data.get.apply[Option[String]]("description").getOrElse(null),
-          notes = data.get.apply[Option[String]]("notes").getOrElse(null),
+          description = data.get.apply[Option[String]]("description").getOrElse(""),
+          notes = data.get.apply[Option[String]]("notes").getOrElse(""),
+          home = data.get.apply[Option[String]]("home").getOrElse(""),
           startTime = data.get.apply[Date]("fromTime"), endTime = data.get.apply[Date]("toTime"), templateId = data.get.apply[Long]("template_id"))
     }
   }
@@ -39,10 +40,10 @@ class RoundDAL() {
           """
             UPDATE round
             SET template_id={template}, description={description},
-              fromTime={from}, toTime={to}, notes={notes}
+              fromTime={from}, toTime={to}, notes={notes}, home={home}
             WHERE id={id}
           """).on('template -> round.templateId, 'description -> round.description,
-            'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id)
+            'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id, 'home -> round.home)
           .executeUpdate()
     }
   }
@@ -53,15 +54,15 @@ class RoundDAL() {
 
         val key: Option[Long] = SQL(
           """
-            INSERT INTO round (template_id, description, fromTime, toTime, notes)
-            VALUES ({template}, {description}, {from}, {to}, {notes})
+            INSERT INTO round (template_id, description, fromTime, toTime, notes, home)
+            VALUES ({template}, {description}, {from}, {to}, {notes}, {home})
           """).on('template -> round.templateId, 'description -> round.description,
-            'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'id -> round.id)
+            'from -> round.startTime, 'to -> round.endTime, 'notes -> round.notes, 'home -> round.home, 'id -> round.id)
           .executeInsert()
 
         val created = key.get
 
-        if (prevRoundID != null) {
+        if (prevRoundID != null && prevRoundID != "") {
           //transition codes to next round
           SQL("update codes set round_id={next} where code not in (select code from users)").on('next -> created).executeUpdate()
 
@@ -101,15 +102,15 @@ class RoundDAL() {
     }
   }
 
-  def getRemainingCodes():List[Code] = {
+  def getRemainingCodes(): List[Code] = {
     DB.withConnection {
-     implicit c=>
+      implicit c =>
         val data = SQL(
           """
             SELECT code, round_id FROM codes WHERE code NOT IN (
               SELECT code FROM users
             )
-          """)().map(row=>Code(row[String]("code"), row[Long]("round_id")))
+          """)().map(row => Code(row[String]("code"), row[Long]("round_id")))
 
         data.toList
     }

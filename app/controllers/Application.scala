@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc._
-import controllers.dal.{StoryDAL, TemplateDAL}
+import controllers.dal.{RoundDAL, StoryDAL, TemplateDAL}
 import java.util.Date
 import controllers.utils.{U, Config}
 import scala.collection.mutable
@@ -15,7 +15,8 @@ object Application extends Controller {
       } else if (session.get("user").isEmpty)
         Redirect("/login")
       else {
-        Ok(views.html.home(IndexData(U.user(session))))
+        val u=U.user(session)
+        Ok(views.html.home(new RoundDAL().getRound(u.round).home,IndexData(u)))
       }
   }
 }
@@ -96,7 +97,7 @@ object Settings extends Enumeration {
   val ADMINPW = Value
 }
 
-case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = new Date(), templateId:Long = 2, description:String="", notes:String="") {
+case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = new Date(), templateId:Long = 2, description:String="", notes:String="", home:String="") {
   val sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 
   def startTimeFormatted = sdf.format(startTime)

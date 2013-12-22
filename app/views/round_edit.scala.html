@@ -20,9 +20,14 @@
                 <td><input type="text" name="templateId" value="@round.templateId" /></td>
             </tr>
             <tr>
+                <th>Home Text</th>
+                <td><textarea name="hometext">@round.home</textarea></td>
+            </tr>
+            <tr>
                 <th>Notes</th>
                 <td><textarea name="notes">@round.notes</textarea></td>
             </tr>
+
             @if(isInsert) {
                 <tr>
                     <th>round ID of which stories should be copied from</th>
