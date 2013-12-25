@@ -79,3 +79,27 @@ table.list {
 .part_name {
     font-weight: bold;
 }
+
+/* message bar */
+#messagebar {
+    right:0;
+    float:right;
+    width:300px;
+    height:500px;
+    background-color:#ccc;
+}
+
+#messagebar div.message {
+    border-bottom: 1px solid #000;
+}
+
+#messagebar div.message span.msgauthor {
+    font-weight: bold;
+}
+
+#messagebar div.message span.messageContent {
+    font-style: italic;
+}
+#messagebar div.message span.messageDate {
+
+}

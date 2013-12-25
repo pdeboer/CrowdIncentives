@@ -19,10 +19,12 @@ object MessageController extends Controller {
         Redirect("/wait")
       } else {
         val messageDAL = new MessageDAL(u.round)
-        val res: JsObject = JsObject(
+        val res = JsObject(
           Seq("messages" -> JsArray(messageDAL.getAllMessages().map(_.toMap)))
         )
-        Ok(views.html.plain(res.toString()))
+        val resString = res.toString()
+
+        Ok(views.html.plain(resString.substring(1, resString.size-1)))
       }
   }
 

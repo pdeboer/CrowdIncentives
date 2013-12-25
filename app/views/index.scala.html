@@ -16,8 +16,47 @@
         }
     </div>
 
-    <div class="content">
-    @content
-    </div>
+    <table>
+        <tr>
+            <td width="100%" style="vertical-align: top;">
+                <div id="content">
+                @content
+                </div>
 
+            </td>
+            <td style="vertical-align: top">
+                <div id="messagebar">
+
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <script type="text/javascript">
+        function refreshMessages() {
+        $.ajax({
+            type:"get",
+            format:"text/html",
+            url:"/messages",
+            success: function(data, textStatus) {
+                var msgBar = document.getElementById("messagebar");
+                msgBar.innerHTML ="";
+                var js = $.parseJSON(data);
+                $.each(js.messages, function(key, value) {
+                   //parse single message of format
+                   //{ "messages":[{"id":1,"from":{"id":1,"name":"java.lang.String"},"to":-1,"createDate":"2013-12-12 16:01:35.0","body":"asdf\t"}] }
+
+                msgBar.innerHTML += '<p class="message"><span class="msgauthor">'+value.from.name+':</span>';
+                msgBar.innerHTML += '<span class="messageContent">'+value.body+'</span>';
+                msgBar.innerHTML += '<span class="messageDate">'+value.createDate+'</span></p>';
+               });
+            },
+            error: function(data) {
+                alert("coulndt parse message response. " + data);
+            }
+
+        })
+        }
+        refreshMessages();
+    </script>
 }

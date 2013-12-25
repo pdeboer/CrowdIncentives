@@ -24,6 +24,7 @@ class MessageDAL(val roundId: Long) {
             FROM messages m INNER JOIN users f ON m.user_from = f.id
             WHERE m.round_id = {round} AND m.user_to IS NULL
             ORDER BY m.create_date DESC
+            LIMIT 200
           """
         ).on('round -> roundId)().map(r => extractMessage(r))
 
