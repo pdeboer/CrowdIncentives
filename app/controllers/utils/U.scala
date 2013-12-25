@@ -3,6 +3,8 @@ package controllers.utils
 import play.api.mvc.Session
 import controllers.dal.UserDAL
 import controllers.{IndexData, User}
+import scala.util.parsing.json.JSONObject
+import play.api.libs.json.JsObject
 
 /**
  * @author pdeboer

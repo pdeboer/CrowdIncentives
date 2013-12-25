@@ -6,6 +6,8 @@ import java.util.Date
 import controllers.utils.{U, Config}
 import scala.collection.mutable
 import java.text.SimpleDateFormat
+import play.api.libs.json.{JsObject, JsValue, JsString, JsNumber}
+import scala.util.parsing.json.JSON
 
 object Application extends Controller {
   def index = Action {
@@ -23,7 +25,9 @@ object Application extends Controller {
 
 //need to define all model classes here, otherwise invisible to views. that's ugly
 
-case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false, code:String="")
+case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false, code:String="") {
+  def toMap = JsObject(Seq("id"->JsNumber(id), "name"->JsString(name)))
+}
 
 case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "")
 
@@ -104,4 +108,11 @@ case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = 
   def endTimeFormatted = sdf.format(endTime)
 }
 
-case class Code(code:String, round:Long)
+case class Code(code: String, round: Long)
+
+case class Message(id: Long = -1, from: User, to: User = null, createDate: Date = new Date(), body:String) {
+  def toMap =  {
+    JsObject(Seq("id"->JsNumber(id), "from"->from.toMap, "to"->(if(to==null) JsNumber(-1) else to.toMap),
+      "createDate"->JsString(createDate.toString), "body"->JsString(body)))
+  }
+}
