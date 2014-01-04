@@ -15,6 +15,8 @@ import controllers.StoryPart
  *         First created on 10/12/13 at 18:02
  */
 class MessageDAL(val roundId: Long) {
+  private val userDAL = new UserDAL()
+
   def getAllMessages() = {
     DB.withConnection {
       implicit c =>
@@ -51,7 +53,6 @@ class MessageDAL(val roundId: Long) {
   }
 
   private def extractMessage(row: SqlRow): Message = {
-    val userDAL = new UserDAL()
     val m = Message(
       id = row[Long]("id"), from = userDAL.getUser(row[Long]("user_from").toInt),
       to = if (row[Option[Long]]("user_to").isEmpty) null
