@@ -37,7 +37,7 @@ class MessageDAL(val roundId: Long) {
       implicit c =>
         val r = SQL(
           """
-            SELECT m.id, m.user_from, f.name, m.user_to, t.name, m.create_date,
+            SELECT m.id, m.user_from, f.name as from_name, m.user_to, t.name as to_name, m.create_date,
               m.body
             FROM messages m INNER JOIN users f ON m.user_from = f.id
               LEFT JOIN users t ON m.user_to = t.id
@@ -51,12 +51,14 @@ class MessageDAL(val roundId: Long) {
   }
 
   private def extractMessage(row: SqlRow): Message = {
-    Message(
-      id = row[Long]("id"), from = User(row[Long]("messages.user_from"), row.metaData.getAliased("from_name").get._3),
+    val userDAL = new UserDAL()
+    val m = Message(
+      id = row[Long]("id"), from = userDAL.getUser(row[Long]("user_from").toInt),
       to = if (row[Option[Long]]("user_to").isEmpty) null
-          else User(row[Option[Long]]("user_to").get, row.metaData.getAliased("to_name").get._3),
+          else userDAL.getUser(row[Option[Long]]("user_to").get.toInt),
       createDate = row[Date]("create_date"), body = row[String]("body")
     )
+    m
   }
 
   def updatePart(partId: Long, updated: StoryPart) {

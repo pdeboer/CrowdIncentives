@@ -20,7 +20,7 @@ object Security {
   def checkUserAllowedToEditGlobal(u: User, globalId: Long) =
     new StoryDAL(u.round).getIntegratedStory(globalId).author.id == u.id || checkIsAdmin(u)
 
-  def checkIfRedirectToWaitingRoom(u:User) = !new UserDAL().userRoundTimeframe(u).isNow && !checkIsAdmin(u)
+  def checkIfRedirectToWaitingRoom(u: User) = !new UserDAL().userRoundTimeframe(u).isNow && !checkIsAdmin(u)
 
-  def checkIsAdmin(u:User) = u.isAdmin
+  def checkIsAdmin(u: User) = u != null && u.isAdmin
 }
