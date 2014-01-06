@@ -24,8 +24,24 @@ object MessageController extends Controller {
         )
         val resString = res.toString()
 
-        Ok(views.html.plain(resString.substring(1, resString.size-1)))
+        Ok(views.html.plain(resString.substring(1, resString.size - 1)))
       }
   }
 
+  def sendPublicMessage() = Action {
+    implicit request =>
+      val u = U.user(session)
+      if (utils.Security.checkIfRedirectToWaitingRoom(u)) {
+        Redirect("/wait")
+      } else {
+        val map = request.body.asFormUrlEncoded.get
+        val messageBody = map.get("message").get.head
+        val message = Message(from = u, body = messageBody)
+
+        val messageDAL = new MessageDAL(u.round)
+        messageDAL.sendMessage(message)
+
+        Ok(views.html.plain("200"))
+      }
+  }
 }

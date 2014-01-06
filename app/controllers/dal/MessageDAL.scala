@@ -62,30 +62,17 @@ class MessageDAL(val roundId: Long) {
     m
   }
 
-  def updatePart(partId: Long, updated: StoryPart) {
-    DB.withConnection {
-      implicit c =>
-        SQL(
-          """
-            UPDATE part
-            SET name = {name}, body = {body}, last_modification = NOW(), user_id = {author}
-            WHERE id = {id}
-          """).on('name -> updated.name, 'body -> updated.content,
-            'author -> updated.author.id, 'id -> updated.id).executeUpdate()
-    }
-  }
-
-  def insertPart(templatePartId: Long, newPart: StoryPart) = {
+  def sendMessage(m:Message) = {
     DB.withConnection {
       implicit c =>
         val id = SQL(
           """
-            INSERT INTO part
-              (name, body, create_date, last_modification, user_id, template_part_id, round_id)
-            VALUES ({name}, {body},{create}, {mod}, {author}, {templatePart}, {round})
-          """
-        ).on('name -> newPart.name, 'body -> newPart.content,
-            'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId, 'create -> newPart.createDate, 'mod -> newPart.lastModification)
+            INSERT INTO messages
+              (user_from,user_to, body, round_id, create_date)
+            VALUES ({userfrom}, {userto}, {body}, {round}, {createdate})
+          """.replaceAll("\\{userto\\}", if(m.to == null) "NULL" else m.to.id +"")
+        ).on('userfrom->m.from.id,
+          'body->m.body, 'round->roundId, 'createdate->m.createDate)
           .executeInsert()
 
         id

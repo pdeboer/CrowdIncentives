@@ -28,11 +28,24 @@
                 <div id="messagebar">
 
                 </div>
+                <form id="sendmessage" onsubmit="return sendMessage();">
+                    <input type="text" name="message" /><input type="submit" value="send" />
+                </form>
             </td>
         </tr>
     </table>
 
     <script type="text/javascript">
+        function sendMessage() {
+            $.ajax({
+                type:"post",
+                data: $("#sendmessage" ).serialize(),
+                url:"/messages/public",
+                success: function(data) { alert("success"+data); }
+            })
+            return false;
+        }
+
         function refreshMessages() {
         $.ajax({
             type:"get",
