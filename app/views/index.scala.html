@@ -41,7 +41,7 @@
                 type:"post",
                 data: $("#sendmessage" ).serialize(),
                 url:"/messages/public",
-                success: function(data) { alert("success"+data); }
+                success: function(data) {  }
             })
             return false;
         }
@@ -59,10 +59,12 @@
                    //parse single message of format
                    //{ "messages":[{"id":1,"from":{"id":1,"name":"java.lang.String"},"to":-1,"createDate":"2013-12-12 16:01:35.0","body":"asdf\t"}] }
 
-                msgBar.innerHTML += '<p class="message"><span class="msgauthor">'+value.from.name+':</span>';
-                msgBar.innerHTML += '<span class="messageContent">'+value.body+'</span>';
-                msgBar.innerHTML += '<span class="messageDate">'+value.createDate+'</span></p>';
-               });
+                var htmlStr = '<p class="message"><span class="msgauthor">'+value.from.name+':</span>';
+                htmlStr += '<span class="messageDate">'+value.createDate+'</span>';
+                htmlStr += '<span class="messageContent">'+value.body+'</span></p>';
+
+                msgBar.innerHTML+= htmlStr;
+                });
             },
             error: function(data) {
                 alert("couldnt parse message response. " + data);
@@ -71,5 +73,7 @@
         })
         }
         refreshMessages();
+
+        window.setInterval(function() { refreshMessages(); }, 2000);
     </script>
 }

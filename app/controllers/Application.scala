@@ -102,10 +102,8 @@ object Settings extends Enumeration {
 }
 
 case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = new Date(), templateId:Long = 2, description:String="", notes:String="", home:String="") {
-  val sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-
-  def startTimeFormatted = sdf.format(startTime)
-  def endTimeFormatted = sdf.format(endTime)
+  def startTimeFormatted = Config.sdf.format(startTime)
+  def endTimeFormatted = Config.sdf.format(endTime)
 }
 
 case class Code(code: String, round: Long)
@@ -113,6 +111,6 @@ case class Code(code: String, round: Long)
 case class Message(id: Long = -1, from: User, to: User = null, createDate: Date = new Date(), body:String) {
   def toMap =  {
     JsObject(Seq("id"->JsNumber(id), "from"->from.toMap, "to"->(if(to==null) JsNumber(-1) else to.toMap),
-      "createDate"->JsString(createDate.toString), "body"->JsString(body)))
+      "createDate"->JsString(Config.sdf.format(createDate)), "body"->JsString(body)))
   }
 }

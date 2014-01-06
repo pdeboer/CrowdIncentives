@@ -84,22 +84,25 @@ table.list {
 #messagebar {
     right:0;
     float:right;
+    overflow:auto;
     width:300px;
     height:500px;
     background-color:#ccc;
 }
 
-#messagebar div.message {
+#messagebar p.message {
     border-bottom: 1px solid #000;
+    margin:0;
 }
 
-#messagebar div.message span.msgauthor {
+#messagebar p.message span.msgauthor {
     font-weight: bold;
 }
 
-#messagebar div.message span.messageContent {
+#messagebar p.message span.messageContent {
     font-style: italic;
 }
-#messagebar div.message span.messageDate {
-
+#messagebar p.message span.messageDate {
+    float:right;
+    clear:right;
 }

@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import controllers.utils.{Security, U}
+import controllers.utils.{Config, Security, U}
 import controllers.dal.{UserDAL, RoundDAL, TemplateDAL, StoryDAL}
 import java.util.Date
 
@@ -78,8 +78,8 @@ object Admin extends Controller {
         val notes = map.get("notes").get.head
         val hometext = map.get("hometext").get.head
 
-        val startTimeParsed = Round().sdf.parse(startTime)
-        val endTimeParsed = Round().sdf.parse(endTime)
+        val startTimeParsed = Config.sdf.parse(startTime)
+        val endTimeParsed = Config.sdf.parse(endTime)
         val templateIdParsed = templateId.toLong
 
         val newRound = Round(roundId, startTimeParsed, endTimeParsed, templateIdParsed, description, notes, home = hometext)
