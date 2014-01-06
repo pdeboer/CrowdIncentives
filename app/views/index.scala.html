@@ -24,10 +24,10 @@
                 </div>
 
             </td>
-            <td style="vertical-align: top;border:1px solid #000000;">
+            <td style="vertical-align: top; border:1px solid #000000;">
                 <h1>Chat</h1>
                 <form id="sendmessage" onsubmit="return sendMessage();">
-                    <input type="text" name="message"  style="width:240px;" />
+                    <input type="text" id="messagetext" name="message"  style="width:240px;" />
                     <input type="submit" value="send" />
                 </form>
                 <div id="messagebar">
@@ -43,7 +43,7 @@
                 type:"post",
                 data: $("#sendmessage" ).serialize(),
                 url:"/messages/public",
-                success: function(data) {  }
+                success: function(data) { document.getElementById("messagetext" ).value=""; }
             })
             return false;
         }
