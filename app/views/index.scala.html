@@ -18,19 +18,21 @@
 
     <table>
         <tr>
-            <td width="100%" style="vertical-align: top;">
+            <td width="100%" style="padding-right:30px; vertical-align: top;">
                 <div id="content">
                 @content
                 </div>
 
             </td>
-            <td style="vertical-align: top">
+            <td style="vertical-align: top;border:1px solid #000000;">
+                <h1>Chat</h1>
+                <form id="sendmessage" onsubmit="return sendMessage();">
+                    <input type="text" name="message"  style="width:240px;" />
+                    <input type="submit" value="send" />
+                </form>
                 <div id="messagebar">
 
                 </div>
-                <form id="sendmessage" onsubmit="return sendMessage();">
-                    <input type="text" name="message" /><input type="submit" value="send" />
-                </form>
             </td>
         </tr>
     </table>
