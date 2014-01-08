@@ -70,13 +70,13 @@ class StoryDAL(val roundId: Long) {
   def insertIntegratedStory(newStory: IntegratedStory) = {
     DB.withConnection {
       implicit c =>
-        val id:Option[Long] = SQL(
+        val id: Option[Long] = SQL(
           """
             INSERT INTO global (name, create_date, last_modification, user_id, round_id)
             VALUES ({name}, {create}, {mod}, {user}, {round})
           """
         ).on('name -> newStory.name, 'user -> newStory.author.id, 'round -> roundId,
-          'create->newStory.createDate, 'mod->newStory.lastModification)
+            'create -> newStory.createDate, 'mod -> newStory.lastModification)
           .executeInsert()
 
         //save all associations
@@ -136,10 +136,12 @@ class StoryDAL(val roundId: Long) {
         SQL(
           """
             UPDATE part
-            SET name = {name}, body = {body}, last_modification = NOW(), user_id = {author}
+            SET name = {name}, body = {body}, last_modification = NOW(),
+                user_id = {author}, doubleValue = {doubleValue}
             WHERE id = {id}
           """).on('name -> updated.name, 'body -> updated.content,
-            'author -> updated.author.id, 'id -> updated.id).executeUpdate()
+            'author -> updated.author.id, 'id -> updated.id,
+            'doubleValue -> updated.doubleValue).executeUpdate()
     }
   }
 
@@ -149,11 +151,11 @@ class StoryDAL(val roundId: Long) {
         val id = SQL(
           """
             INSERT INTO part
-              (name, body, create_date, last_modification, user_id, template_part_id, round_id)
-            VALUES ({name}, {body},{create}, {mod}, {author}, {templatePart}, {round})
+              (name, body, create_date, last_modification, user_id, template_part_id, round_id, doubleValue)
+            VALUES ({name}, {body},{create}, {mod}, {author}, {templatePart}, {round}, {doubleValue})
           """
         ).on('name -> newPart.name, 'body -> newPart.content,
-            'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId, 'create->newPart.createDate, 'mod->newPart.lastModification)
+            'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId, 'create -> newPart.createDate, 'mod -> newPart.lastModification, 'doubleValue -> newPart.doubleValue)
           .executeInsert()
 
         id
@@ -179,12 +181,14 @@ class StoryDAL(val roundId: Long) {
       implicit c =>
         val r = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, u.code
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, u.code, p.doubleValue
             FROM part p INNER JOIN users u ON p.user_id = u.id
             WHERE p.id={id} and p.round_id={round}
           """).on('id -> partId, 'round -> roundId)().headOption
 
-        if (r.isEmpty) null else StoryPart(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[String]("body"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), author = User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")))
+        if (r.isEmpty) null
+        else StoryPart(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[String]("body"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), author = User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")),
+          doubleValue = r.get.apply[Double]("doubleValue"))
     }
   }
 }

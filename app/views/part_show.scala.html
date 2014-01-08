@@ -1,7 +1,7 @@
-@(part: StoryPart, template: TemplatePart, indexData: IndexData)
+@(part: StoryPart, templatePart: TemplatePart, template:Template, indexData: IndexData)
 
 @index(indexData) {
-    <h2>@template.name: @part.name</h2>
+    <h2>@templatePart.name: @part.name</h2>
     <p class="author">Part authored by <strong>@part.author.name</strong>, last modified on
         <strong>@part.modificationDateFormatted</strong>
     @if(indexData.user.isAdmin) {
@@ -9,11 +9,15 @@
     }
     </p>
 
-    <p class="before">@template.beforeText</p>
+    <p class="before">@templatePart.beforeText</p>
 
     <p class="part_content">@part.content</p>
 
-    <p class="after">@template.afterText</p>
+    @if(template.doubleValueName!=null) {
+        <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @part.doubleValue</p>
+    }
 
-    <p><a href="/part/@template.id">back to overview</a></p>
+    <p class="after">@templatePart.afterText</p>
+
+    <p><a href="/part/@templatePart.id">back to overview</a></p>
 }

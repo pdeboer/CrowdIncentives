@@ -73,7 +73,7 @@ object IntegratedStory {
   }
 }
 
-case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null) {
+case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue:Double = 0d) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 }
 
@@ -93,6 +93,8 @@ class Counter(var init: Int = 0) {
 
   def get() = init
 }
+
+case class Template(id:Long, name:String="", doubleValuesSummed:Boolean=false, multiPartSelection:Boolean=false, doubleValueName:String=null)
 
 case class Setting(key: String, value: String)
 
