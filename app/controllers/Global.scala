@@ -38,10 +38,9 @@ object Global extends Controller {
         val name = map.get("name").get.head
 
         val associations = templateDAL.getParts().map(p => {
-          val idOp = map.get("part" + p.id).getOrElse(List()).headOption
-          val id = idOp.getOrElse(null)
-          if (id == null) null else storyDAL.getPart(id.toLong)
-        }).filterNot(_ == null)
+          val idOp = map.get("part" + p.id).getOrElse(Nil)
+          if (idOp.isEmpty) null else idOp.map(p => storyDAL.getPart(p.toLong))
+        }).filterNot(_ == null).flatten
 
         val global = IntegratedStory(globalId, name, new Date(), new Date(), u, associations)
 
