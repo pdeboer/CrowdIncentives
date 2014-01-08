@@ -21,10 +21,14 @@ object Part extends Controller {
 
         if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
           Forbidden(views.html.error(IndexData(u)))
-        else
+        else {
+          val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
           Ok(views.html.part(storyDAL.getParts(templatePartId),
             templateDAL.getPart(templatePartId),
+            template,
             IndexData(u)))
+
+        }
       }
   }
 

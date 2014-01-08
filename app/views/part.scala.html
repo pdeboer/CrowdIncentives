@@ -1,7 +1,6 @@
-@(data: List[StoryPart], part: TemplatePart, indexData: IndexData, counter: Counter = new Counter())
+@(data: List[StoryPart], part: TemplatePart, template:Template, indexData: IndexData, counter: Counter = new Counter())
 
 @index(indexData) {
-
 
     <a href="/part/@part.id/create">Create new @part.name</a>
 
@@ -9,6 +8,9 @@
         <table class="list">
             <tr>
                 <th>Name</th>
+                @if(template.doubleValueName!=null) {
+                    <th>@template.doubleValueName</th>
+                }
                 <th>Author</th>
                 <th>Last modification</th>
                 <th>&nbsp;</th>
@@ -17,6 +19,9 @@
             @for(p <- data) {
                 <tr class="bg@(counter.incrementAndGet() % 2)">
                     <td>@p.name</td>
+                    @if(template.doubleValueName!=null) {
+                        <td>@p.doubleValue</td>
+                    }
                     <td>@p.author.name</td>
                     <td>@p.modificationDateFormatted</td>
                     <td>
@@ -26,6 +31,7 @@
                             <a href="/part/@part.id/show/@p.id">show</a>
                         }
                     </td>
+
                 </tr>
             }
         </table>
