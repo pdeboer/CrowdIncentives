@@ -1,4 +1,4 @@
-@(global: IntegratedStory, templateParts: List[TemplatePart], indexData: IndexData, counter: Counter = new Counter())
+@(global: IntegratedStory, templateParts: List[TemplatePart], template:Template, indexData: IndexData, counter: Counter = new Counter())
 
 @index(indexData) {
     <script type="text/javascript">
@@ -26,6 +26,11 @@
                     <i>@global.partForTemplate(p.id).author.name @if(indexData.user.isAdmin) { ( @global.partForTemplate(p.id).author.code ) }</i>:
                     @global.partForTemplate(p.id).name</p>
                 <p class="part_content">@global.partForTemplate(p.id).content</p>
+
+                @if(template.doubleValueName!=null) {
+                    <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @global.partForTemplate(p.id).doubleValue</p>
+                }
+
                 <a onclick="toggle ( 'part@p.id' )">
                     CHANGE </a>
 
@@ -37,6 +42,9 @@
                     <tr>
                         <th>&nbsp;</th>
                         <th>Name</th>
+                        @if(template.doubleValueName!=null) {
+                            <th>@template.doubleValueName</th>
+                        }
                         <th>Author</th>
                         <th>Last modification</th>
                         <th>&nbsp;</th>
@@ -48,6 +56,9 @@
                                 @if(global.partForTemplate(p.id) != null && global.partForTemplate(p.id).id == t.id) {
                                         checked="checked" }></td>
                             <td>@t.name</td>
+                            @if(template.doubleValueName!=null) {
+                                <td>@t.doubleValue</td>
+                            }
                             <td>@t.author.name</td>
                             <td>@t.modificationDateFormatted</td>
                             <td><a onclick="toggle ( 'content@t.id')">show</a></td>

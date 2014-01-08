@@ -1,4 +1,4 @@
-@(global: IntegratedStory, template:List[TemplatePart], indexData: IndexData)
+@(global: IntegratedStory, templateParts:List[TemplatePart], template:Template, indexData: IndexData)
 
 @index(indexData) {
     <h2>@global.name</h2>
@@ -9,6 +9,12 @@
         @for(p <- global.parts) {
             <p class="before">@p.template.beforeText</p>
             <p class="part_content">@p.content</p>
+            @if(template.doubleValueName!=null) {
+                <p class="part_doubleValue">
+                    <span class="title">@template.doubleValueName: </span>
+                        @p.doubleValue
+                </p>
+            }
             <p class="after">@p.template.afterText</p>
         }
     }else{
