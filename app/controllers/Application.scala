@@ -45,13 +45,13 @@ case class IntegratedStory(id: Long, name: String, createDate: Date, lastModific
   def modificationDateFormatted = Config.sdf.format(lastModification)
   def creationDateFormatted = Config.sdf.format(createDate)
 
-  private var _partForTemplateCache = new mutable.HashMap[Long, StoryPart]()
+  private var _partForTemplateCache = new mutable.HashMap[Long, List[StoryPart]]()
 
-  def partForTemplate(templateId: Long): StoryPart = {
+  def partsForTemplate(templateId: Long): List[StoryPart] = {
     if (parts == null) null
     else {
       if (!_partForTemplateCache.contains(templateId)) {
-        _partForTemplateCache += templateId -> parts.find(_.template.id == templateId).getOrElse(null)
+        _partForTemplateCache += templateId -> parts.filter(_.template.id == templateId).getOrElse(null)
       }
       _partForTemplateCache(templateId)
     }
