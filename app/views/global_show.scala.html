@@ -5,6 +5,13 @@
     <p class="author">Story composed by <strong>@global.author.name</strong>, last modified on
         <strong>@global.modificationDateFormatted</strong></p>
 
+    @if(template.doubleValueName!=null && template.doubleValuesSummed) {
+        <p class="part_doubleValue">
+            <span class="title">Total @template.doubleValueName: </span>
+            @global.partSum
+        </p>
+    }
+
     @if(global.parts.size > 0) {
         @for(p <- global.parts) {
             <p class="before">@p.template.beforeText</p>

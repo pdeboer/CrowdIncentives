@@ -17,7 +17,8 @@ object Global extends Controller {
       } else {
         val u = U.user(session)
         val storyDAL = new StoryDAL(u.round)
-        Ok(views.html.global(storyDAL.getIntegratedStories(),
+        val template = new TemplateDAL(u.round).getTemplate(new RoundDAL().getRound(u.round).templateId)
+        Ok(views.html.global(storyDAL.getIntegratedStories(), template,
           IndexData(u)))
       }
   }
