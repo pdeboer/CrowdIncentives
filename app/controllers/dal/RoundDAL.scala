@@ -62,10 +62,10 @@ class RoundDAL() {
 
         val created = key.get
 
-        if (prevRoundID != null && prevRoundID != "") {
-          //transition codes to next round
-          SQL("update codes set round_id={next} where code not in (select code from users)").on('next -> created).executeUpdate()
+        //transition codes to next round
+        SQL("update codes set round_id={next} where code not in (select code from users)").on('next -> created).executeUpdate()
 
+        if (prevRoundID != null && prevRoundID != "") {
           val old = new StoryDAL(prevRoundID.toLong)
           val fresh = new StoryDAL(created)
 
