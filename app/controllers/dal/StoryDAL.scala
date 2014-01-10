@@ -20,14 +20,12 @@ class StoryDAL(val roundId: Long) {
       implicit c =>
         val data = SQL(
           """
-            SELECT g.id, g.name, g.create_date, g.last_modification, u.username, g.user_id
+            SELECT g.id
             FROM global g INNER JOIN users u ON g.user_id = u.id
             WHERE round_id = {round}
             ORDER BY last_modification DESC
           """
-        ).on('round -> roundId)().map(r =>
-          IntegratedStory(r[Long]("id"), r[String]("name"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")))
-          )
+        ).on('round -> roundId)().map(r => getIntegratedStory(r[Long]("id")))
 
         data.toList
     }
@@ -48,7 +46,7 @@ class StoryDAL(val roundId: Long) {
 
         val data = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, tp.id AS templatepart_id, tp.description as tpdesc, tp.before_text as tpbefore, after_text as tpafter, u.code
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, tp.id AS templatepart_id, tp.description as tpdesc, tp.before_text as tpbefore, after_text as tpafter, u.code, p.doubleValue
             FROM part p INNER JOIN users u ON p.user_id = u.id
               INNER JOIN global_parts gp ON p.id = gp.part_id AND gp.global_id = {global}
               INNER JOIN template_part tp ON p.template_part_id = tp.id
@@ -58,7 +56,7 @@ class StoryDAL(val roundId: Long) {
         ).on('round -> roundId, 'global -> globalId)().map(r =>
           StoryPart(r[Long]("part.id"), r[String]("part.name"), r[String]("part.body"), r[Date]("part.create_date"), r[Date]("part.last_modification"),
             author = User(r[Long]("part.user_id"), r[String]("users.username"), code = r[String]("code")),
-            template = TemplatePart(r[Long]("template_part.id"), r[String]("template_part.description"), r[String]("template_part.before_text"), r[String]("template_part.after_text")))
+            template = TemplatePart(r[Long]("template_part.id"), r[String]("template_part.description"), r[String]("template_part.before_text"), r[String]("template_part.after_text")), doubleValue = r[Double]("doubleValue"))
           )
 
         story.parts = data.toList

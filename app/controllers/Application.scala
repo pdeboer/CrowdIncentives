@@ -47,9 +47,11 @@ case class IntegratedStory(id: Long, name: String, createDate: Date, lastModific
   def creationDateFormatted = Config.sdf.format(createDate)
 
   def partSum: Double = {
-    parts.foldLeft(0d) {
-      (r, p) => r + p.doubleValue
-    }
+    if (parts == null) 0d
+    else
+      parts.foldLeft(0d) {
+        (r, p) => r + p.doubleValue
+      }
   }
 
   private var _partForTemplateCache = new mutable.HashMap[Long, List[StoryPart]]()
@@ -58,10 +60,9 @@ case class IntegratedStory(id: Long, name: String, createDate: Date, lastModific
     if (parts == null) null
     else {
       if (!_partForTemplateCache.contains(templateId)) {
-        val l = parts.filter(_.template.id == templateId)
-        if (l.size > 0)
-          _partForTemplateCache += templateId -> l
+        _partForTemplateCache += templateId -> parts.filter(_.template.id == templateId)
       }
+
       _partForTemplateCache(templateId)
     }
   }
