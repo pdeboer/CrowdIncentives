@@ -17,16 +17,16 @@ object Application extends Controller {
       } else if (session.get("user").isEmpty)
         Redirect("/login")
       else {
-        val u=U.user(session)
-        Ok(views.html.home(new RoundDAL().getRound(u.round).home,IndexData(u)))
+        val u = U.user(session)
+        Ok(views.html.home(new RoundDAL().getRound(u.round).home, IndexData(u)))
       }
   }
 }
 
 //need to define all model classes here, otherwise invisible to views. that's ugly
 
-case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false, code:String="") {
-  def toMap = JsObject(Seq("id"->JsNumber(id), "name"->JsString(name)))
+case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false, code: String = "") {
+  def toMap = JsObject(Seq("id" -> JsNumber(id), "name" -> JsString(name)))
 }
 
 case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "")
@@ -43,10 +43,13 @@ case class FromTo(from: Date, to: Date) {
 
 case class IntegratedStory(id: Long, name: String, createDate: Date, lastModification: Date, author: User = null, var parts: List[StoryPart] = null) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
+
   def creationDateFormatted = Config.sdf.format(createDate)
 
-  def partSum:Double = {
-    parts.foldLeft(0d){ (r, p) => r+=p.doubleValue }
+  def partSum: Double = {
+    parts.foldLeft(0d) {
+      (r, p) => r + p.doubleValue
+    }
   }
 
   private var _partForTemplateCache = new mutable.HashMap[Long, List[StoryPart]]()
@@ -55,7 +58,9 @@ case class IntegratedStory(id: Long, name: String, createDate: Date, lastModific
     if (parts == null) null
     else {
       if (!_partForTemplateCache.contains(templateId)) {
-        _partForTemplateCache += templateId -> parts.filter(_.template.id == templateId).getOrElse(null)
+        val l = parts.filter(_.template.id == templateId)
+        if (l.size > 0)
+          _partForTemplateCache += templateId -> l
       }
       _partForTemplateCache(templateId)
     }
@@ -77,7 +82,7 @@ object IntegratedStory {
   }
 }
 
-case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue:Double = 0d) {
+case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 }
 
@@ -98,7 +103,7 @@ class Counter(var init: Int = 0) {
   def get() = init
 }
 
-case class Template(id:Long, name:String="", doubleValuesSummed:Boolean=false, multiPartSelection:Boolean=false, doubleValueName:String=null)
+case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null)
 
 case class Setting(key: String, value: String)
 
@@ -107,16 +112,17 @@ object Settings extends Enumeration {
   val ADMINPW = Value
 }
 
-case class Round(var id:Long = -1L, startTime:Date = new Date(), endTime:Date = new Date(), templateId:Long = 2, description:String="", notes:String="", home:String="") {
+case class Round(var id: Long = -1L, startTime: Date = new Date(), endTime: Date = new Date(), templateId: Long = 2, description: String = "", notes: String = "", home: String = "") {
   def startTimeFormatted = Config.sdf.format(startTime)
+
   def endTimeFormatted = Config.sdf.format(endTime)
 }
 
 case class Code(code: String, round: Long)
 
-case class Message(id: Long = -1, from: User, to: User = null, createDate: Date = new Date(), body:String) {
-  def toMap =  {
-    JsObject(Seq("id"->JsNumber(id), "from"->from.toMap, "to"->(if(to==null) JsNumber(-1) else to.toMap),
-      "createDate"->JsString(Config.sdf.format(createDate)), "body"->JsString(body)))
+case class Message(id: Long = -1, from: User, to: User = null, createDate: Date = new Date(), body: String) {
+  def toMap = {
+    JsObject(Seq("id" -> JsNumber(id), "from" -> from.toMap, "to" -> (if (to == null) JsNumber(-1) else to.toMap),
+      "createDate" -> JsString(Config.sdf.format(createDate)), "body" -> JsString(body)))
   }
 }

@@ -29,7 +29,7 @@
                     <p class="part_content">@tp.content</p>
 
                     @if(template.doubleValueName!=null) {
-                        <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @global.partsForTemplate(p.id).doubleValue</p>
+                        <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> tp.doubleValue</p>
                     }
                 }
 
@@ -55,7 +55,7 @@
                     @for(t <- global.candidatesForTemplatePart(p.id, indexData.user)) {
                         <tr class="bg@(counter.incrementAndGet() % 2)">
                             <td><input type="@if(template.multiPartSelection){ radio }else{ checkbox }" name="part@p.id" value="@t.id"
-                                @if(global.partsForTemplate(p.id) != null && global.partsForTemplate(p.id).id == t.id) {
+                                @if(global.partsForTemplate(p.id) != null && global.partsForTemplate(p.id).exists(_.id == t.id)) {
                                         checked="checked" }></td>
                             <td>@t.name</td>
                             @if(template.doubleValueName!=null) {

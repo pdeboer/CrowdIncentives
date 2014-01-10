@@ -39,7 +39,7 @@ class TemplateDAL(val roundId: Long) {
           name = u.get.apply[String]("name"),
           doubleValuesSummed = u.get.apply[Boolean]("double_values_summed_up"),
           multiPartSelection = u.get.apply[Boolean]("global_has_multiple_parts"),
-          doubleValueName = u.get.apply[String]("double_value_name")
+          doubleValueName = u.get.apply[Option[String]]("double_value_name").getOrElse(null)
         )
     }
   }

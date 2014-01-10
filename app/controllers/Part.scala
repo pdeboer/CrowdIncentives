@@ -124,7 +124,7 @@ object Part extends Controller {
         if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
           Forbidden(views.html.error(IndexData(u)))
         else
-          Ok(views.html.part_show(part, templateDAL.getPart(templatePartId),
+          Ok(views.html.part_show(part, templateDAL.getPart(templatePartId), template,
             IndexData(u)))
       }
   }
