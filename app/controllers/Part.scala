@@ -50,7 +50,8 @@ object Part extends Controller {
           val name = map.get("name").get.head
           val content = map.get("content").get.head
           val doubleValueOption = map.get("doubleValue").getOrElse(Nil).headOption
-          val part = StoryPart(partId, name, content, new Date(), new Date(), u, doubleValue = doubleValueOption.getOrElse("0").toDouble)
+          val doubleValueNumeric = doubleValueOption.getOrElse("0").replaceAll("[^0-9\\.]", "")
+          val part = StoryPart(partId, name, content, new Date(), new Date(), u, doubleValue = doubleValueNumeric.toDouble)
 
           if (partId > 0) {
             //update

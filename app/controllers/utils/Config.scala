@@ -1,6 +1,6 @@
 package controllers.utils
 
-import java.text.SimpleDateFormat
+import java.text.{DecimalFormat, NumberFormat, SimpleDateFormat}
 
 /**
  * @author pdeboer
@@ -8,4 +8,6 @@ import java.text.SimpleDateFormat
  */
 object Config {
   val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS")
+
+  val df = NumberFormat.getInstance().asInstanceOf[DecimalFormat]
 }

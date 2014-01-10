@@ -8,7 +8,7 @@
     @if(template.doubleValueName!=null && template.doubleValuesSummed) {
         <p class="part_doubleValue">
             <span class="title">Total @template.doubleValueName: </span>
-            @global.partSum
+            @global.partSumFormatted
         </p>
     }
 
@@ -19,7 +19,7 @@
             @if(template.doubleValueName!=null) {
                 <p class="part_doubleValue">
                     <span class="title">@template.doubleValueName: </span>
-                        @p.doubleValue
+                        @p.doubleValueFormatted
                 </p>
             }
             <p class="after">@p.template.afterText</p>

@@ -21,7 +21,7 @@
                     <tr class="bg@(counter.incrementAndGet() % 2)">
                         <td>@g.name</td>
                         @if(template.doubleValueName!=null && template.doubleValuesSummed) {
-                            <td>@g.partSum</td>
+                            <td>@g.partSumFormatted</td>
                         }
                         <td>@g.author.name</td>
                         <td>@g.creationDateFormatted</td>

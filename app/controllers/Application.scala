@@ -54,6 +54,8 @@ case class IntegratedStory(id: Long, name: String, createDate: Date, lastModific
       }
   }
 
+  def partSumFormatted = Config.df.format(partSum)
+
   private var _partForTemplateCache = new mutable.HashMap[Long, List[StoryPart]]()
 
   def partsForTemplate(templateId: Long): List[StoryPart] = {
@@ -87,6 +89,8 @@ object IntegratedStory {
 
 case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
+
+  def doubleValueFormatted = Config.df.format(doubleValue)
 }
 
 object StoryPart {

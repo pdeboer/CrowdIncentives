@@ -29,7 +29,7 @@
                     <p class="part_content">@tp.content</p>
 
                     @if(template.doubleValueName!=null) {
-                        <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @tp.doubleValue</p>
+                        <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @tp.doubleValueFormatted</p>
                     }
                 }
 
@@ -59,7 +59,7 @@
                                         checked="checked" }></td>
                             <td>@t.name</td>
                             @if(template.doubleValueName!=null) {
-                                <td>@t.doubleValue</td>
+                                <td>@t.doubleValueFormatted</td>
                             }
                             <td>@t.author.name</td>
                             <td>@t.modificationDateFormatted</td>
