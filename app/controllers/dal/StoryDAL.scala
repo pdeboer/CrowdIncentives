@@ -117,13 +117,13 @@ class StoryDAL(val roundId: Long) {
       implicit c =>
         val data = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, p.doubleValue
             FROM part p INNER JOIN users u ON p.user_id = u.id
             WHERE round_id = {round} AND template_part_id = {template}
             ORDER BY last_modification DESC
           """
         ).on('round -> roundId, 'template -> templatePartId)().map(r =>
-          StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")))
+          StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")), doubleValue = r[Double]("doubleValue"))
           )
 
         data.toList

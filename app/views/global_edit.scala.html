@@ -54,7 +54,7 @@
 
                     @for(t <- global.candidatesForTemplatePart(p.id, indexData.user)) {
                         <tr class="bg@(counter.incrementAndGet() % 2)">
-                            <td><input type="@if(template.multiPartSelection){ radio }else{ checkbox }" name="part@p.id" value="@t.id"
+                            <td><input type="@if(template.multiPartSelection){ radio }else{ select }" name="part@p.id" value="@t.id"
                                 @if(global.partsForTemplate(p.id) != null && global.partsForTemplate(p.id).exists(_.id == t.id)) {
                                         checked="checked" }></td>
                             <td>@t.name</td>

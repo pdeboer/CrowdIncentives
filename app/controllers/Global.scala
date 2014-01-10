@@ -70,7 +70,7 @@ object Global extends Controller {
         val templateDAL = new TemplateDAL(u.round)
         val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
 
-        Ok(views.html.global_edit(IntegratedStory.empty, templateDAL.getParts(),
+        Ok(views.html.global_edit(IntegratedStory.empty(u), templateDAL.getParts(),
           template, IndexData(u)))
       }
   }

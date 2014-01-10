@@ -80,6 +80,8 @@ object IntegratedStory {
   def empty = {
     IntegratedStory(-1, "", new Date(), new Date())
   }
+
+  def empty(u: User) = IntegratedStory(-1, "", new Date(), new Date(), u)
 }
 
 case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d) {
