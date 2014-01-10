@@ -106,3 +106,11 @@ table.list {
     float:right;
     clear:right;
 }
+
+.part_doubleValue {
+    font-style: italic;
+}
+.part_doubleValue .title {
+    font-weight: bold;
+    font-style: normal;
+}

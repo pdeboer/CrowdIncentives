@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import controllers.utils.{Security, U}
-import controllers.dal.{TemplateDAL, StoryDAL}
+import controllers.dal.{RoundDAL, TemplateDAL, StoryDAL}
 import java.util.Date
 
 /**
@@ -17,7 +17,8 @@ object Global extends Controller {
       } else {
         val u = U.user(session)
         val storyDAL = new StoryDAL(u.round)
-        Ok(views.html.global(storyDAL.getIntegratedStories(),
+        val template = new TemplateDAL(u.round).getTemplate(new RoundDAL().getRound(u.round).templateId)
+        Ok(views.html.global(storyDAL.getIntegratedStories(), template,
           IndexData(u)))
       }
   }
@@ -38,10 +39,9 @@ object Global extends Controller {
         val name = map.get("name").get.head
 
         val associations = templateDAL.getParts().map(p => {
-          val idOp = map.get("part" + p.id).getOrElse(List()).headOption
-          val id = idOp.getOrElse(null)
-          if (id == null) null else storyDAL.getPart(id.toLong)
-        }).filterNot(_ == null)
+          val idOp = map.get("part" + p.id).getOrElse(Nil)
+          if (idOp.isEmpty) null else idOp.map(p => storyDAL.getPart(p.toLong))
+        }).filterNot(_ == null).flatten
 
         val global = IntegratedStory(globalId, name, new Date(), new Date(), u, associations)
 
@@ -68,9 +68,10 @@ object Global extends Controller {
       } else {
         val u = U.user(session)
         val templateDAL = new TemplateDAL(u.round)
+        val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
 
-        Ok(views.html.global_edit(IntegratedStory.empty, templateDAL.getParts(),
-          IndexData(u)))
+        Ok(views.html.global_edit(IntegratedStory.empty(u), templateDAL.getParts(),
+          template, IndexData(u)))
       }
   }
 
@@ -86,7 +87,8 @@ object Global extends Controller {
         if (!Security.checkUserAllowedToEditGlobal(u, globalId)) {
           Forbidden(views.html.error(IndexData(u)))
         } else {
-          Ok(views.html.global_edit(storyDAL.getIntegratedStory(globalId), templateDAL.getParts(), IndexData(u)))
+          val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
+          Ok(views.html.global_edit(storyDAL.getIntegratedStory(globalId), templateDAL.getParts(), template, IndexData(u)))
         }
       }
   }
@@ -100,9 +102,10 @@ object Global extends Controller {
         val storyDAL = new StoryDAL(u.round)
         val global = storyDAL.getIntegratedStory(globalId)
         val templateDAL = new TemplateDAL(u.round)
+        val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
 
         Ok(views.html.global_show(global, templateDAL.getParts(),
-          IndexData(u)))
+          template, IndexData(u)))
       }
   }
 }

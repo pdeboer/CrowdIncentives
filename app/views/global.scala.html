@@ -1,14 +1,17 @@
-@(data: List[IntegratedStory], indexData: IndexData, counter: Counter = new Counter())
+@(data: List[IntegratedStory], template:Template, indexData: IndexData, counter: Counter = new Counter())
 
     @index(indexData) {
 
 
-        <a href="/global/create">Create Integrated story</a>
+        <p><a href="/global/create">Create Integrated story</a></p>
 
         @if(data.size > 0) {
             <table class="list">
                 <tr>
                     <th>Name</th>
+                    @if(template.doubleValueName!=null && template.doubleValuesSummed) {
+                        <th>Sum of @template.doubleValueName</th>
+                    }
                     <th>Author</th>
                     <th>Creation date</th>
                     <th>Last modification</th>
@@ -17,6 +20,9 @@
                 @for(g <- data) {
                     <tr class="bg@(counter.incrementAndGet() % 2)">
                         <td>@g.name</td>
+                        @if(template.doubleValueName!=null && template.doubleValuesSummed) {
+                            <td>@g.partSum</td>
+                        }
                         <td>@g.author.name</td>
                         <td>@g.creationDateFormatted</td>
                         <td>@g.modificationDateFormatted</td>

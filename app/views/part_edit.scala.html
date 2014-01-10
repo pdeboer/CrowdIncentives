@@ -1,8 +1,22 @@
-@(part: StoryPart, template: TemplatePart, indexData: IndexData)
+@(part: StoryPart, templatePart: TemplatePart, template:Template, indexData: IndexData)
 
 @index(indexData) {
-    @template.beforeText
-    <form action="/part/@template.id/save/@part.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
+    <script type="text/javascript">
+        function checkForm() {
+            var ret = true;
+            var msg = "";
+            @if(template.doubleValueName!=null) {
+                ret = document.getElementById("doubleValue" ).value.isNumeric
+                if(!ret) msg = "Please enter a numeric value into @template.doubleValueName";
+            }
+            if(!ret) alert(msg);
+
+            return ret;
+        }
+    </script>
+
+    @templatePart.beforeText
+    <form action="/part/@templatePart.id/save/@part.id" method="post" enctype="application/x-www-form-urlencoded" class="edit" onsubmit="return checkForm();">
         <table>
             <tr>
                 <th>Name</th>
@@ -12,11 +26,17 @@
                 <th>Content</th>
                 <td><textarea name="content">@part.content</textarea></td>
             </tr>
+            @if(template.doubleValueName != null) {
             <tr>
-                <th><a href="/part/@template.id" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
+                <th>@template.doubleValueName</th>
+                <td><input type="text" name="doubleValue" value="@part.doubleValue"/></td>
+            </tr>
+            }
+            <tr>
+                <th><a href="/part/@templatePart.id" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
                 <td><input type="submit" value="save" /></td>
             </tr>
         </table>
-        @template.afterText
+        @templatePart.afterText
     </form>
 }

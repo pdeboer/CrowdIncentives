@@ -1,7 +1,7 @@
 package controllers.dal
 
 import play.api.db.DB
-import controllers.TemplatePart
+import controllers.{Template, TemplatePart}
 import anorm._
 import play.api.Play.current
 
@@ -11,7 +11,7 @@ import play.api.Play.current
  */
 class TemplateDAL(val roundId: Long) {
 
-  def getTemplateId():Long = {
+  def getTemplateId(): Long = {
     DB.withConnection {
       implicit c =>
         val u = SQL(
@@ -20,6 +20,27 @@ class TemplateDAL(val roundId: Long) {
           """).on('id -> roundId)().headOption
 
         if (u.isEmpty) -1 else u.get.apply[Long]("template_id")
+    }
+  }
+
+  def getTemplate(templateId: Long): Template = {
+    DB.withConnection {
+      implicit c =>
+        val u = SQL(
+          """
+            SELECT id, name, double_values_summed_up, global_has_multiple_parts,
+              double_value_name
+            FROM template WHERE id = {id}
+          """).on('id -> templateId)().headOption
+
+        if (u.isEmpty) null
+        else Template(
+          id = templateId,
+          name = u.get.apply[String]("name"),
+          doubleValuesSummed = u.get.apply[Boolean]("double_values_summed_up"),
+          multiPartSelection = u.get.apply[Boolean]("global_has_multiple_parts"),
+          doubleValueName = u.get.apply[Option[String]]("double_value_name").getOrElse(null)
+        )
     }
   }
 

@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import controllers.utils.{Security, U}
-import controllers.dal.{TemplateDAL, StoryDAL}
+import controllers.dal.{RoundDAL, TemplateDAL, StoryDAL}
 import java.util.Date
 
 /**
@@ -21,10 +21,14 @@ object Part extends Controller {
 
         if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
           Forbidden(views.html.error(IndexData(u)))
-        else
+        else {
+          val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
           Ok(views.html.part(storyDAL.getParts(templatePartId),
             templateDAL.getPart(templatePartId),
+            template,
             IndexData(u)))
+
+        }
       }
   }
 
@@ -45,7 +49,8 @@ object Part extends Controller {
           val map = request.body.asFormUrlEncoded.get
           val name = map.get("name").get.head
           val content = map.get("content").get.head
-          val part = StoryPart(partId, name, content, new Date(), new Date(), u)
+          val doubleValueOption = map.get("doubleValue").getOrElse(Nil).headOption
+          val part = StoryPart(partId, name, content, new Date(), new Date(), u, doubleValue = doubleValueOption.getOrElse("0").toDouble)
 
           if (partId > 0) {
             //update
@@ -75,9 +80,11 @@ object Part extends Controller {
 
         if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
           Forbidden(views.html.error(IndexData(u)))
-        else
+        else {
+          val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
           Ok(views.html.part_edit(StoryPart.empty, templateDAL.getPart(templatePartId),
-            IndexData(u)))
+            template, IndexData(u)))
+        }
       }
   }
 
@@ -94,9 +101,11 @@ object Part extends Controller {
         if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)) ||
           !Security.checkUserAllowedToEditPart(u, partId))
           Forbidden(views.html.error(IndexData(u)))
-        else
-          Ok(views.html.part_edit(part, templateDAL.getPart(templatePartId),
+        else {
+          val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
+          Ok(views.html.part_edit(part, templateDAL.getPart(templatePartId), template,
             IndexData(u)))
+        }
       }
   }
 
@@ -110,10 +119,12 @@ object Part extends Controller {
         val part = storyDAL.getPart(partId)
         val templateDAL = new TemplateDAL(u.round)
 
+        val template = templateDAL.getTemplate(new RoundDAL().getRound(u.round).templateId)
+
         if (!Security.checkUserAccessToTemplatePart(u, templateDAL.getPart(templatePartId)))
           Forbidden(views.html.error(IndexData(u)))
         else
-          Ok(views.html.part_show(part, templateDAL.getPart(templatePartId),
+          Ok(views.html.part_show(part, templateDAL.getPart(templatePartId), template,
             IndexData(u)))
       }
   }
