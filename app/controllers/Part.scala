@@ -54,7 +54,7 @@ object Part extends Controller {
 
           if (partId > 0) {
             //update
-            if (Security.checkUserAllowedToEditPart(u, partId)) {
+            if (!Security.checkUserAllowedToEditPart(u, partId)) {
               Forbidden(views.html.error(IndexData(u)))
             } else {
               val current = storyDAL.getPart(partId)
