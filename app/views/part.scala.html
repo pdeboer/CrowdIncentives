@@ -1,6 +1,9 @@
-@(data: List[StoryPart], part: TemplatePart, template:Template, indexData: IndexData, counter: Counter = new Counter())
+@(data: List[StoryPart], part: TemplatePart, template: Template, indexData: IndexData, counter: Counter = new Counter())
 
 @index(indexData) {
+    @if(part.beforeText != null && part.beforeText != "") {
+        <p>@part.beforeText</p>
+    }
 
     <p><a href="/part/@part.id/create">Create new @part.name</a></p>
 
@@ -8,7 +11,7 @@
         <table class="list">
             <tr>
                 <th>Name</th>
-                @if(template.doubleValueName!=null) {
+                @if(template.doubleValueName != null) {
                     <th>@template.doubleValueName</th>
                 }
                 <th>Author</th>
@@ -19,23 +22,25 @@
             @for(p <- data) {
                 <tr class="bg@(counter.incrementAndGet() % 2)">
                     <td>@p.name</td>
-                    @if(template.doubleValueName!=null) {
+                    @if(template.doubleValueName != null) {
                         <td>@p.doubleValueFormatted</td>
                     }
                     <td>@p.author.name</td>
                     <td>@p.modificationDateFormatted</td>
                     <td>
-                        @if(p.author.id == indexData.user.id) {
-                            <a href="/part/@part.id/edit/@p.id">edit</a>
-                        }else{
-                            <a href="/part/@part.id/show/@p.id">show</a>
-                        }
+                    @if(p.author.id == indexData.user.id) {
+                        <a href="/part/@part.id/edit/@p.id">edit</a>
+                    } else {
+                        <a href="/part/@part.id/show/@p.id">show</a>
+                    }
                     </td>
 
                 </tr>
             }
         </table>
-    }else{
+    } else {
         No @part.name yet
     }
+
+    <p>@part.afterText</p>
 }
