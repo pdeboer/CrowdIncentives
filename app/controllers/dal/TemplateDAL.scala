@@ -29,7 +29,7 @@ class TemplateDAL(val roundId: Long) {
         val u = SQL(
           """
             SELECT id, name, double_values_summed_up, global_has_multiple_parts,
-              double_value_name
+              double_value_name, global_name, global_description
             FROM template WHERE id = {id}
           """).on('id -> templateId)().headOption
 
@@ -39,7 +39,9 @@ class TemplateDAL(val roundId: Long) {
           name = u.get.apply[String]("name"),
           doubleValuesSummed = u.get.apply[Boolean]("double_values_summed_up"),
           multiPartSelection = u.get.apply[Boolean]("global_has_multiple_parts"),
-          doubleValueName = u.get.apply[Option[String]]("double_value_name").getOrElse(null)
+          doubleValueName = u.get.apply[Option[String]]("double_value_name").getOrElse(null),
+          globalName = u.get.apply[String]("global_name"),
+          globalDescription = u.get.apply[String]("global_description")
         )
     }
   }

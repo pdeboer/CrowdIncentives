@@ -2,6 +2,9 @@
 
     @index(indexData) {
 
+        @if(indexData.template.globalDescription!="") {
+        <p>@indexData.template.globalDescription</p>
+        }
 
         <p><a href="/global/create">Create Integrated story</a></p>
 

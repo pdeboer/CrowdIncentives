@@ -10,7 +10,7 @@
         @if(index.user.isAdmin) {
             <a href="/admin" style="color:#900">Admin</a>
         }
-        <a href="/global">Complete Stories</a>
+        <a href="/global">@index.template.globalName</a>
         @for(p <- index.templateParts) {
             <a hreF="/part/@p.id">@p.name</a>
         }

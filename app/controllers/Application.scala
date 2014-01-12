@@ -98,7 +98,12 @@ object StoryPart {
 }
 
 case class IndexData(user: User) {
-  val templateParts = new TemplateDAL(user.round).getParts()
+  private val templateDAL = new TemplateDAL(user.round)
+  private val roundDAL = new RoundDAL()
+
+  lazy val templateParts = templateDAL.getParts()
+  lazy val round = roundDAL.getRound(user.round)
+  lazy val template = templateDAL.getTemplate(round.templateId)
 }
 
 class Counter(var init: Int = 0) {
@@ -110,7 +115,7 @@ class Counter(var init: Int = 0) {
   def get() = init
 }
 
-case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null)
+case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null, globalName:String ="", globalDescription:String="")
 
 case class Setting(key: String, value: String)
 
