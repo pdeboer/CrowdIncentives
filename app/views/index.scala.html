@@ -3,7 +3,9 @@
 
 @main("Welcome to CrowdIncentive") {
 
-    <h1>Welcome @index.user.name</h1>
+    <h1>Welcome @index.user.name
+    <span id="roundcounter"></span>
+    </h1>
 
     <div class="menu">
         <a href="/">Home</a>
@@ -38,6 +40,32 @@
     </table>
 
     <script type="text/javascript">
+
+        function calculateRemainingTime() {
+            var id = document.getElementById("roundcounter");
+            var roundEnd = new Date(@index.round.endTime.getTime);
+            var now = new Date();
+            var distance = roundEnd - now;
+
+            if (distance < 0) {
+                id.innerText = 'Round ended';
+                return;
+            }
+
+            var _second = 1000;
+            var _minute = _second * 60;
+            var _hour = _minute * 60;
+            var _day = _hour * 24;
+
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+            id.innerText = minutes+":"+seconds+" remaining.";
+        }
+        calculateRemainingTime();
+
         function sendMessage() {
             $.ajax({
                 type:"post",
@@ -76,6 +104,7 @@
         }
         refreshMessages();
 
+        window.setInterval(function() { calculateRemainingTime(); }, 1000);
         window.setInterval(function() { refreshMessages(); }, 2000);
     </script>
 }

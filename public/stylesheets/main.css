@@ -40,6 +40,11 @@ p.alone {
     margin-bottom:20px;
 }
 
+#roundcounter {
+    float:right;
+    color:#009;
+}
+
 .author {
     background-color:#eee;
     padding:3px;
