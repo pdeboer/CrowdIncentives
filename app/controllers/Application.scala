@@ -29,7 +29,7 @@ case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = fa
   def toMap = JsObject(Seq("id" -> JsNumber(id), "name" -> JsString(name)))
 }
 
-case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "", descriptionForGlobal:String="")
+case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "", descriptionForGlobal: String = "")
 
 case class FromTo(from: Date, to: Date) {
   def fromFormatted = Config.sdf.format(from)
@@ -115,7 +115,11 @@ class Counter(var init: Int = 0) {
   def get() = init
 }
 
-case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null, globalName:String ="", globalDescription:String="", globalLinkName:String="Create Global", partLinkPrefix:String="Create")
+case class Ping(user: User, round: Long, time: Date) {
+  def timeFormatted = Config.sdf.format(time)
+}
+
+case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null, globalName: String = "", globalDescription: String = "", globalLinkName: String = "Create Global", partLinkPrefix: String = "Create")
 
 case class Setting(key: String, value: String)
 

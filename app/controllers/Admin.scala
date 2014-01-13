@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import controllers.utils.{Config, Security, U}
-import controllers.dal.{UserDAL, RoundDAL, TemplateDAL, StoryDAL}
+import controllers.dal._
 import java.util.Date
 
 /**
@@ -29,7 +29,8 @@ object Admin extends Controller {
         Forbidden(views.html.error(IndexData(u)))
       } else {
         val roundDAL = new RoundDAL()
-        Ok(views.html.round_edit(roundDAL.getRound(roundId), false, IndexData(u)))
+        val pings = new PingDAL(u.round).getAllPings()
+        Ok(views.html.round_edit(roundDAL.getRound(roundId), pings, IndexData(u), isInsert =  false))
       }
   }
 
@@ -56,7 +57,7 @@ object Admin extends Controller {
       if (!utils.Security.checkIsAdmin(u)) {
         Forbidden(views.html.error(IndexData(u)))
       } else {
-        Ok(views.html.round_edit(Round(), isInsert=true, IndexData(u)))
+        Ok(views.html.round_edit(Round(), Nil, IndexData(u), isInsert=true))
       }
   }
 

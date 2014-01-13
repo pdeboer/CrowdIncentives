@@ -2,9 +2,12 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import controllers.utils.{Security, U}
-import controllers.dal.{UserDAL, RoundDAL, TemplateDAL, StoryDAL, MessageDAL}
+import controllers.dal._
 import java.util.Date
 import play.api.libs.json.{JsArray, JsObject, Json}
+import play.api.libs.json.JsArray
+import controllers.Message
+import play.api.libs.json.JsObject
 
 
 /**
@@ -18,6 +21,10 @@ object MessageController extends Controller {
       if (utils.Security.checkIfRedirectToWaitingRoom(u)) {
         Redirect("/wait")
       } else {
+        //also set user active
+        val pingDAL = new PingDAL(u.round)
+        pingDAL.setActive(u.id)
+
         val messageDAL = new MessageDAL(u.round)
         val res = JsObject(
           Seq("messages" -> JsArray(messageDAL.getAllMessages().map(_.toMap)))
