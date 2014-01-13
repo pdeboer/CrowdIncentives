@@ -29,7 +29,7 @@ case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = fa
   def toMap = JsObject(Seq("id" -> JsNumber(id), "name" -> JsString(name)))
 }
 
-case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "")
+case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "", descriptionForGlobal:String="")
 
 case class FromTo(from: Date, to: Date) {
   def fromFormatted = Config.sdf.format(from)

@@ -53,12 +53,12 @@ class TemplateDAL(val roundId: Long) {
       implicit c =>
         val u = SQL(
           """
-            SELECT id, description, before_text, after_text
+            SELECT id, description, before_text, after_text, description_in_global
             FROM template_part
             WHERE id={id}
           """).on('id -> templatePartId)().headOption
 
-        if (u.isEmpty) null else TemplatePart(u.get.apply[Long]("id"), u.get.apply[String]("description"), u.get.apply[String]("before_text"), u.get.apply[String]("after_text"))
+        if (u.isEmpty) null else TemplatePart(u.get.apply[Long]("id"), u.get.apply[String]("description"), u.get.apply[String]("before_text"), u.get.apply[String]("after_text"), descriptionForGlobal = u.get.apply[String]("description_in_global"))
     }
   }
 

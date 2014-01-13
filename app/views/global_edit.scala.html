@@ -12,14 +12,14 @@
     }
     </script>
 
-    <h2>Your integrated story</h2>
+    <h2>@global.name</h2>
     @if(indexData.user.isAdmin) { Author: @global.author.name (@global.author.code) }
     <form action="/global/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
         <p><input type="submit" value="save" /></p>
 
         Name: <input type="text" name="name" value="@global.name" />
         @for(p <- templateParts) {
-            <p class="before">@p.beforeText</p>
+            <p class="before">@p.descriptionForGlobal</p>
 
             @if(global.partsForTemplate(p.id) != null) {
                 @for(tp <- global.partsForTemplate(p.id)) {
