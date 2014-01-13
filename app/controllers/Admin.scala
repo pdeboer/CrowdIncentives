@@ -33,6 +33,22 @@ object Admin extends Controller {
       }
   }
 
+  def copyPart() = Action {
+    implicit request =>
+      val u = U.user(session)
+      if (!utils.Security.checkIsAdmin(u)) {
+        Forbidden(views.html.error(IndexData(u)))
+      } else {
+        val map = request.body.asFormUrlEncoded.get
+        val sourcePart = map.get("part").get.head
+        val targetRound = map.get("target").get.head
+
+        val storyDAL = new StoryDAL(u.round)
+        storyDAL.copyPartToRound(sourcePart.toLong, targetRound.toLong)
+
+        Redirect("/part/"+storyDAL.getPart(sourcePart.toLong, fetchTemplatePart = true).template.id)
+      }
+  }
 
   def create() = Action {
     implicit request =>

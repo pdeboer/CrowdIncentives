@@ -30,11 +30,13 @@
                         <td>@g.creationDateFormatted</td>
                         <td>@g.modificationDateFormatted</td>
                         <td>
-                        @if(g.author.id == indexData.user.id || indexData.user.isAdmin) {
-                            <a href="/global/edit/@g.id">                                edit
-                            </a>
+                        @if(g.author.id == indexData.user.id) {
+                            <a href="/global/edit/@g.id">edit</a>
                         } else {
                             <a href="/global/show/@g.id">show</a>
+                        }
+                        @if(indexData.user.isAdmin) {
+                            / <a href="/global/edit/@g.id">edit</a>
                         }
                         </td>
                     </tr>

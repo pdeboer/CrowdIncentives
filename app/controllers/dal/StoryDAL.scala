@@ -174,19 +174,28 @@ class StoryDAL(val roundId: Long) {
     }
   }
 
-  def getPart(partId: Long): StoryPart = {
+  def copyPartToRound(partId: Long, targetRound: Long) {
+    val part = getPart(partId, fetchTemplatePart = true)
+    if (part != null) {
+      val targetTemplate = new StoryDAL(targetRound)
+      targetTemplate.insertPart(part.template.id, part)
+    }
+  }
+
+  def getPart(partId: Long, fetchTemplatePart: Boolean = false): StoryPart = {
     DB.withConnection {
       implicit c =>
         val r = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, u.code, p.doubleValue
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, u.code, p.doubleValue, p.template_part_id
             FROM part p INNER JOIN users u ON p.user_id = u.id
             WHERE p.id={id} and p.round_id={round}
           """).on('id -> partId, 'round -> roundId)().headOption
 
         if (r.isEmpty) null
         else StoryPart(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[String]("body"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), author = User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")),
-          doubleValue = r.get.apply[Double]("doubleValue"))
+          doubleValue = r.get.apply[Double]("doubleValue"),
+          template = if (fetchTemplatePart) new TemplateDAL(roundId).getPart(r.get.apply[Long]("template_part_id")) else null)
     }
   }
 }

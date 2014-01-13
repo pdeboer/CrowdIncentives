@@ -39,4 +39,12 @@
         </table>
         @templatePart.afterText
     </form>
+
+
+    @if(indexData.user.isAdmin && part.id >=0) {
+        <form action="/part/copy" method="post" enctype="application/x-www-form-urlencoded">
+            Copy this item to round <input type="text" name="target" /><input type="submit" value="copy" />
+            <input type="hidden" name="part" value="@part.id"/>
+        </form>
+    }
 }

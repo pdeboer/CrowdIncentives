@@ -33,6 +33,9 @@
                     } else {
                         <a href="/part/@part.id/show/@p.id">show</a>
                     }
+                    @if(indexData.user.isAdmin) {
+                         / <a href="/part/@part.id/edit/@p.id">edit</a>
+                    }
                     </td>
 
                 </tr>
