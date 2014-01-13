@@ -67,13 +67,14 @@ class TemplateDAL(val roundId: Long) {
       implicit c =>
         val data = SQL(
           """
-            SELECT p.id, p.description, p.before_text, p.after_text
+            SELECT p.id, p.description, p.before_text, p.after_text, description_in_global
             FROM template_part p INNER JOIN round r ON r.template_id = p.template_id
             WHERE r.id = {round}
           """).on('round -> roundId)().map(row => TemplatePart(
           id = row[Long]("id"), name = row[String]("description"),
           beforeText = row[Option[String]]("before_text").getOrElse(null),
-          afterText = row[Option[String]]("after_text").getOrElse(null)
+          afterText = row[Option[String]]("after_text").getOrElse(null),
+          descriptionForGlobal = row[String]("description_in_global")
         ))
 
         data.toList
