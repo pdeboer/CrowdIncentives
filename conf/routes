@@ -22,7 +22,7 @@ GET         /part/:template/create            controllers.Part.create(template:L
 GET         /part/:template/edit/:part        controllers.Part.edit(template:Long, part:Long)
 POST        /part/:template/save/:part        controllers.Part.save(template:Long, part:Long)
 GET         /part/:template/show/:part        controllers.Part.show(template:Long, part:Long)
-POST        /admin/part/copy                    controllers.Admin.copyPart()
+POST        /admin/part/copy                  controllers.Admin.copyPart()
 
 GET         /wait                             controllers.Login.waitingroom()
 
@@ -34,6 +34,8 @@ POST        /admin/changeRound                controllers.Admin.changeRoundOfCur
 
 GET         /messages                         controllers.MessageController.allMessages()
 POST        /messages/public                  controllers.MessageController.sendPublicMessage()
+
+GET         /ping/online                      controllers.PingController.getOnline()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.at(path="/public", file)

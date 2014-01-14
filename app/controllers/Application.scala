@@ -26,7 +26,7 @@ object Application extends Controller {
 //need to define all model classes here, otherwise invisible to views. that's ugly
 
 case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = false, code: String = "") {
-  def toMap = JsObject(Seq("id" -> JsNumber(id), "name" -> JsString(name)))
+  def toJson = JsObject(Seq("id" -> JsNumber(id), "name" -> JsString(name)))
 }
 
 case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "", descriptionForGlobal: String = "")
@@ -115,9 +115,6 @@ class Counter(var init: Int = 0) {
   def get() = init
 }
 
-case class Ping(user: User, round: Long, time: Date) {
-  def timeFormatted = Config.sdf.format(time)
-}
 
 case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null, globalName: String = "", globalDescription: String = "", globalLinkName: String = "Create Global", partLinkPrefix: String = "Create")
 
@@ -137,8 +134,14 @@ case class Round(var id: Long = -1L, startTime: Date = new Date(), endTime: Date
 case class Code(code: String, round: Long)
 
 case class Message(id: Long = -1, from: User, to: User = null, createDate: Date = new Date(), body: String) {
-  def toMap = {
-    JsObject(Seq("id" -> JsNumber(id), "from" -> from.toMap, "to" -> (if (to == null) JsNumber(-1) else to.toMap),
+  def toJson = {
+    JsObject(Seq("id" -> JsNumber(id), "from" -> from.toJson, "to" -> (if (to == null) JsNumber(-1) else to.toJson),
       "createDate" -> JsString(Config.sdf.format(createDate)), "body" -> JsString(body)))
   }
+}
+
+case class Ping(user: User, round: Long, time: Date) {
+  def timeFormatted = Config.sdf.format(time)
+
+  def toJson = JsObject(Seq("time"->JsString(Config.sdf.format(time)), "round"->JsNumber(round), "user"->user.toJson))
 }

@@ -21,13 +21,9 @@ object MessageController extends Controller {
       if (utils.Security.checkIfRedirectToWaitingRoom(u)) {
         Redirect("/wait")
       } else {
-        //also set user active
-        val pingDAL = new PingDAL(u.round)
-        pingDAL.setActive(u.id)
-
         val messageDAL = new MessageDAL(u.round)
         val res = JsObject(
-          Seq("messages" -> JsArray(messageDAL.getAllMessages().map(_.toMap)))
+          Seq("messages" -> JsArray(messageDAL.getAllMessages().map(_.toJson)))
         )
         val resString = res.toString()
 
