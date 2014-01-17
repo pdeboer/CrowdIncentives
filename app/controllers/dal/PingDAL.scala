@@ -49,7 +49,7 @@ class PingDAL(val round: Long) {
         val data = SQL( """
             SELECT p.ping_time, u.id, u.username
             FROM ping p INNER JOIN users u ON p.user = u.id
-            WHERE p.round = {round} and p.ping_time > {minDate}
+            WHERE p.round = {round} and p.ping_time > {minDate} AND u.id NOT IN (1,8)
             GROUP BY u.id
             ORDER BY p.ping_time DESC
                         """).on('round -> round, 'minDate -> minDate)().map(r => extractPing(r))
