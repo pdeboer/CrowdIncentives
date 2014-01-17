@@ -77,6 +77,21 @@
             return false;
         }
 
+        function getOnline() {
+        $.ajax({
+            type:"get",
+            format:"text/html",
+            url:"/ping/online",
+            success: function(data, textStatus) {
+                var online = document.getElementById("online");
+                var json = $.parseJSON(data);
+                online.innerText = json.online.length+" Online";
+            }
+        });
+
+        }
+        getOnline();
+
         function refreshMessages() {
         $.ajax({
             type:"get",
@@ -105,6 +120,7 @@
         }
         refreshMessages();
 
+        window.setInterval(function() { getOnline(); }, 1000)
         window.setInterval(function() { calculateRemainingTime(); }, 1000);
         window.setInterval(function() { refreshMessages(); }, 2000);
     </script>
