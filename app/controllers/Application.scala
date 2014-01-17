@@ -116,7 +116,7 @@ class Counter(var init: Int = 0) {
 }
 
 
-case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null, globalName: String = "", globalDescription: String = "", globalLinkName: String = "Create Global", partLinkPrefix: String = "Create")
+case class Template(id: Long, name: String = "", doubleValuesSummed: Boolean = false, multiPartSelection: Boolean = false, doubleValueName: String = null, globalName: String = "", globalDescription: String = "", globalLinkName: String = "Create Global", partLinkPrefix: String = "Create", onlineDisplay:Boolean=true)
 
 case class Setting(key: String, value: String)
 

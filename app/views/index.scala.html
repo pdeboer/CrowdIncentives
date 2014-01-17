@@ -77,6 +77,7 @@
             return false;
         }
 
+        @if( index.template.onlineDisplay ) {
         function getOnline() {
         $.ajax({
             type:"get",
@@ -91,6 +92,8 @@
 
         }
         getOnline();
+        window.setInterval(function() { getOnline(); }, 1000);
+        }
 
         function refreshMessages() {
         $.ajax({
@@ -120,7 +123,6 @@
         }
         refreshMessages();
 
-        window.setInterval(function() { getOnline(); }, 1000)
         window.setInterval(function() { calculateRemainingTime(); }, 1000);
         window.setInterval(function() { refreshMessages(); }, 2000);
     </script>
