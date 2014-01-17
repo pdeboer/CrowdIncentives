@@ -1,60 +1,65 @@
-@(round: Round, pings:List[Ping], indexData: IndexData,isInsert:Boolean=false, counter:Counter=new Counter())
+@(round: Round, pings: List[Ping], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
 
-@index(indexData) {
-    <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
-        <table>
-            <tr>
-                <th>Description</th>
-                <td><input type="text" name="description" value="@round.description" /></td>
-            </tr>
-            <tr>
-                <th>Start Date/Time</th>
-                <td><input type="text" name="startTime" value="@round.startTimeFormatted" /> <i>example: 2013-12-15 05:51:09</i></td>
-            </tr>
-            <tr>
-                <th>End Date/Time</th>
-                <td><input type="text" name="endTime" value="@round.endTimeFormatted" /> <i>example: 2013-12-15 05:51:09</i></td>
-            </tr>
-            <tr>
-                <th>Template ID</th>
-                <td><input type="text" name="templateId" value="@round.templateId" /></td>
-            </tr>
-            <tr>
-                <th>Home Text</th>
-                <td><textarea name="hometext">@round.home</textarea></td>
-            </tr>
-            <tr>
-                <th>Notes</th>
-                <td><textarea name="notes">@round.notes</textarea></td>
-            </tr>
-
-            @if(isInsert) {
+    @index(indexData) {
+        <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
+            <table>
                 <tr>
-                    <th>round ID of which stories should be copied from</th>
-                    <td><input type="text" name="prevround" /></td>
+                    <th>Description</th>
+                    <td><input type="text" name="description" value="@round.description" /></td>
                 </tr>
-            }
-            <tr>
-                <th><a href="/admin" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>
-                <td><input type="submit" value="save" /></td>
-            </tr>
-        </table>
-    </form>
+                <tr>
+                    <th>Start Date/Time</th>
+                    <td><input type="text" name="startTime" value="@round.startTimeFormatted" /> <i>
+                        example: 2013-12-15 05:51:09</i></td>
+                </tr>
+                <tr>
+                    <th>End Date/Time</th>
+                    <td><input type="text" name="endTime" value="@round.endTimeFormatted" /> <i>
+                        example: 2013-12-15 05:51:09</i></td>
+                </tr>
+                <tr>
+                    <th>Template ID</th>
+                    <td><input type="text" name="templateId" value="@round.templateId" /></td>
+                </tr>
+                <tr>
+                    <th>Home Text</th>
+                    <td><textarea name="hometext">@round.home</textarea></td>
+                </tr>
+                <tr>
+                    <th>Notes</th>
+                    <td><textarea name="notes">@round.notes</textarea></td>
+                </tr>
 
-    @if(pings.size>0) {
-        <table class="list" style="margin-top:30px;">
-            <tr>
-                <th>User ID</th>
-                <th>User Name</th>
-                <th>Active-Time</th>
-            </tr>
-            @for(p<-pings) {
-                <tr class="bg@(counter.incrementAndGet()%2)">
-                    <td>@p.user.id</td>
-                    <td>@p.user.name</td>
-                    <td>@p.timeFormatted</td>
+                @if(isInsert) {
+                    <tr>
+                        <th>round ID of which stories should be copied from</th>
+                        <td><input type="text" name="prevround" /></td>
+                    </tr>
+                }
+                <tr>
+                    <th><a href="/admin" onclick="return confirm ( 'all changes will be lost if you cancel' )">
+                        cancel</a></th>
+                    <td><input type="submit" value="save" /></td>
                 </tr>
-            }
-        </table>
+            </table>
+        </form>
+
+        @if(pings.size > 0) {
+            <table class="list" style="margin-top : 30 px ;">
+                <tr>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Active-Time</th>
+                </tr>
+                @for(p <- pings) {
+                    @if(p.user.name == "pdeboer" || p.user.name == "erik") {
+                        <tr class="bg@(counter.incrementAndGet() % 2)">
+                            <td>@p.user.id</td>
+                            <td>@p.user.name</td>
+                            <td>@p.timeFormatted</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
     }
-}
