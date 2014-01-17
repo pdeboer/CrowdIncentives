@@ -52,7 +52,7 @@
                     <th>Active-Time</th>
                 </tr>
                 @for(p <- pings) {
-                    @if(p.user.name == "pdeboer" || p.user.name == "erik") {
+                    @if(p.user.name != "pdeboer" && p.user.name != "erik") {
                         <tr class="bg@(counter.incrementAndGet() % 2)">
                             <td>@p.user.id</td>
                             <td>@p.user.name</td>
