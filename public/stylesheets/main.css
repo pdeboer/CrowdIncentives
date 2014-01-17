@@ -45,6 +45,10 @@ p.alone {
     color:#009;
 }
 
+#online {
+    font-style: italic;
+}
+
 .author {
     background-color:#eee;
     padding:3px;
