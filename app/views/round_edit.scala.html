@@ -51,6 +51,7 @@
                 <tr>
                     <th>User ID</th>
                     <th>User Name</th>
+                    <th>Code</th>
                     <th>Round</th>
                 </tr>
                 @for(p <- onlineUsers) {
@@ -58,6 +59,7 @@
                         <tr class="bg@(counter.incrementAndGet() % 2)">
                             <td>@p.id</td>
                             <td>@p.name</td>
+                            <td>@p.code</td>
                             <td>@p.round</td>
                         </tr>
                     }
