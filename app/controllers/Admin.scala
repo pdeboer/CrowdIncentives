@@ -30,7 +30,9 @@ object Admin extends Controller {
       } else {
         val roundDAL = new RoundDAL()
         val pings = new PingDAL(u.round).getAllPings()
-        Ok(views.html.round_edit(roundDAL.getRound(roundId), pings, IndexData(u), isInsert =  false))
+        val onlineUsers = roundDAL.getUsers(roundId)
+
+        Ok(views.html.round_edit(roundDAL.getRound(roundId), onlineUsers, pings, IndexData(u), isInsert =  false))
       }
   }
 
@@ -57,7 +59,7 @@ object Admin extends Controller {
       if (!utils.Security.checkIsAdmin(u)) {
         Forbidden(views.html.error(IndexData(u)))
       } else {
-        Ok(views.html.round_edit(Round(), Nil, IndexData(u), isInsert=true))
+        Ok(views.html.round_edit(Round(), Nil, Nil, IndexData(u), isInsert=true))
       }
   }
 

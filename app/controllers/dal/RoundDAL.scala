@@ -1,7 +1,7 @@
 package controllers.dal
 
 import play.api.db.DB
-import controllers.{Code, Round, TemplatePart}
+import controllers.{User, Code, Round, TemplatePart}
 import anorm._
 import play.api.Play.current
 import java.util.Date
@@ -99,6 +99,19 @@ class RoundDAL() {
         }
 
         created
+    }
+  }
+
+  def getUsers(roundId:Long):List[User] = {
+    DB.withConnection {
+      implicit c=>
+        val data = SQL(
+          """
+            SELECT id, username, round, code FROM users WHERE round={round}
+          """).on('round->roundId)().map(r=>
+          User(r[Long]("id"), r[String]("username"), r[Long]("round"), code = r[String]("code"))).toList
+
+        data
     }
   }
 
