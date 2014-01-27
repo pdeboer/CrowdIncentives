@@ -135,4 +135,15 @@ class RoundDAL() {
         data.toList
     }
   }
+
+  /**
+   * get round that starts the latest
+   * @return
+   */
+  def getNextRound():Round = {
+    getRounds().foldLeft(Round(startTime = new Date(0L)))((l, r) =>
+      if(l.id == -1L || l.startTime.before(r.startTime)) r else l)
+  }
+
+
 }

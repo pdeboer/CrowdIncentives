@@ -29,18 +29,10 @@ class UserDAL {
         implicit c =>
           val userExists = SQL("SELECT id FROM users WHERE username = {username}").on('username -> name)().size == 1
 
-          val roundForCode = SQL(
-            """
-            SELECT round_id FROM codes
-            WHERE code={code} AND code NOT IN (
-              SELECT code FROM users
-            )
-            """).on('code -> code)()
-
-          if (userExists || roundForCode.headOption.isEmpty) {
+          if (userExists) {
             false
           } else {
-            val round = roundForCode.head.apply[Long]("round_id")
+            val round = new RoundDAL().getNextRound()
 
             val i: Option[Long] = SQL("INSERT INTO users (username, password, round, code) VALUES({username}, {pw}, {round}, {code})")
               .on('username -> name, 'pw -> password, 'round -> round, 'code -> code)
