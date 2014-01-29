@@ -35,7 +35,7 @@ class UserDAL {
             val round = new RoundDAL().getNextRound()
 
             val i: Option[Long] = SQL("INSERT INTO users (username, password, round, code) VALUES({username}, {pw}, {round}, {code})")
-              .on('username -> name, 'pw -> password, 'round -> round, 'code -> code)
+              .on('username -> name, 'pw -> password, 'round -> round.id, 'code -> code)
               .executeInsert()
             !i.isEmpty
           }

@@ -155,7 +155,11 @@ class RoundDAL() {
    */
   def getNextRound():Round = {
     getRounds().foldLeft(Round(startTime = new Date(0L)))((l, r) =>
-      if(l.id == -1L || l.startTime.before(r.startTime)) r else l)
+      if(l.startTime.before(new Date()) && l.endTime.after(new Date())) {
+        // is right now
+        return l
+      } else if(l.id == -1L || l.startTime.before(r.startTime)) r
+      else l)
   }
 
 
