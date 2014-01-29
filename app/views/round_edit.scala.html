@@ -1,4 +1,4 @@
-@(round: Round, pings: List[Ping], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
+@(round: Round, onlineUsers:List[User], pings: List[Ping], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
 
     @index(indexData) {
         <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
@@ -44,7 +44,31 @@
             </table>
         </form>
 
+
+        @if(onlineUsers.size > 0) {
+            <h1>Online Users</h1>
+            <table class="list" style="margin-top : 30 px ;">
+                <tr>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Code</th>
+                    <th>Round</th>
+                </tr>
+                @for(p <- onlineUsers) {
+                    @if(p.name != "pdeboer" && p.name != "erik") {
+                        <tr class="bg@(counter.incrementAndGet() % 2)">
+                            <td>@p.id</td>
+                            <td>@p.name</td>
+                            <td>@p.code</td>
+                            <td>@p.round</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+
         @if(pings.size > 0) {
+            <h1>Pings</h1>
             <table class="list" style="margin-top : 30 px ;">
                 <tr>
                     <th>User ID</th>
