@@ -1,4 +1,4 @@
-@(data: List[Round], codes:List[Code], indexData: IndexData, counter: Counter = new Counter())
+@(data: List[Round], indexData: IndexData, counter: Counter = new Counter())
 
     @index(indexData) {
     <h2>Rounds</h2>
@@ -40,23 +40,4 @@
             </select>
         <input type="submit" value="save"/>
         </form>
-
-    <h2>Available Codes</h2>
-
-    @if(codes.size > 0) {
-        <table class="list">
-            <tr>
-                <th>Code</th>
-                <th>Round</th>
-            </tr>
-            @for(c <- codes) {
-                <tr class="bg@(counter.incrementAndGet() % 2)">
-                    <td>@c.code</td>
-                    <td>@c.round</td>
-                </tr>
-            }
-        </table>
-    }else{
-        No more available codes
-    }
 }

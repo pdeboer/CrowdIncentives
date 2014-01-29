@@ -17,7 +17,7 @@ object Admin extends Controller {
         Forbidden(views.html.error(IndexData(u)))
       } else {
         val roundDAL = new RoundDAL()
-        Ok(views.html.admin(roundDAL.getRounds(), roundDAL.getRemainingCodes(),
+        Ok(views.html.admin(roundDAL.getRounds(),
           IndexData(u)))
       }
   }
