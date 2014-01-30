@@ -108,6 +108,7 @@ class RoundDAL() {
         val data = SQL(
           """
             SELECT id, username, round, code FROM users WHERE round={round}
+            ORDER BY code ASC
           """).on('round->roundId)().map(r=>
           User(r[Long]("id"), r[String]("username"), r[Long]("round"), code = r[String]("code"))).toList
 
