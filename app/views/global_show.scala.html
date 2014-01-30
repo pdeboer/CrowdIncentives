@@ -28,5 +28,10 @@
         No data yet.
     }
 
+    @if(template.globalSummaryTitle!=null){
+        <p><strong>@template.globalSummaryTitle</strong></p>
+        <p>@global.summary</p>
+    }
+
     <p><a href="/global">back to overview</a></p>
 }
