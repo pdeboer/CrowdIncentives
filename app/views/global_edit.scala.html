@@ -14,13 +14,18 @@
 
     <h2>@global.name</h2>
     @if(indexData.user.isAdmin) { Author: @global.author.name (@global.author.code) }
-    <form action="/global/save/@global.id" method="post" enctype="application/x-www-form-urlencoded">
+    <form action="/global/save/@global.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
         <p><input type="submit" value="save" /></p>
 
-        Name: <input type="text" name="name" value="@global.name" />
+        <table class="form">
+            <tr>
+                <th>Name</th>
+                <td><input type="text" name="name" value="@global.name" /></td>
+            </tr>
         @for(p <- templateParts) {
-            <p class="before">@p.descriptionForGlobal</p>
-
+            <tr>
+                <th nowrap="nowrap">@p.descriptionForGlobal</th>
+                <td>
             @if(global.partsForTemplate(p.id) != null) {
                 @for(tp <- global.partsForTemplate(p.id)) {
                     <p class="part_name">
@@ -75,8 +80,18 @@
 
 
             <p class="after">@p.afterText</p>
-
+            </td>
+        </tr>
         }
+
+        @if(template.globalSummaryTitle!=null){
+            <tr><th>
+            @template.globalSummaryTitle</th>
+            <td><textarea name="summary">@global.summary</textarea>
+            </td></tr>
+        }
+            </table>
+
         <p><input type="submit" value="save" /></p>
     </form>
 

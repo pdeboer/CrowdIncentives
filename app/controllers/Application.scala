@@ -41,7 +41,7 @@ case class FromTo(from: Date, to: Date) {
   def minutesLeft = (from.getTime - new Date().getTime) / 60000
 }
 
-case class IntegratedStory(id: Long, name: String, createDate: Date, lastModification: Date, author: User = null, var parts: List[StoryPart] = null) {
+case class IntegratedStory(id: Long, name: String, createDate: Date, lastModification: Date, author: User = null, var parts: List[StoryPart] = null, summary:String=null) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 
   def creationDateFormatted = Config.sdf.format(createDate)

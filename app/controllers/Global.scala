@@ -37,13 +37,15 @@ object Global extends Controller {
         //form handling
         val map = request.body.asFormUrlEncoded.get
         val name = map.get("name").get.head
+        val summary = map.get("summary").getOrElse(null)
 
         val associations = templateDAL.getParts().map(p => {
           val idOp = map.get("part" + p.id).getOrElse(Nil)
           if (idOp.isEmpty) null else idOp.map(p => storyDAL.getPart(p.toLong))
         }).filterNot(_ == null).flatten
 
-        val global = IntegratedStory(globalId, name, new Date(), new Date(), u, associations)
+        val global = IntegratedStory(globalId, name, new Date(), new Date(), u, associations,
+          summary = if(summary == null) null else summary.head)
 
         if (globalId > 0) {
           //update

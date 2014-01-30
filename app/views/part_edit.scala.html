@@ -17,7 +17,7 @@
 
     @templatePart.beforeText
     <form action="/part/@templatePart.id/save/@part.id" method="post" enctype="application/x-www-form-urlencoded" class="edit" onsubmit="return checkForm();">
-        <table>
+        <table class="form">
             <tr>
                 <th>Name</th>
                 <td><input type="text" name="name" value="@part.name" /></td>

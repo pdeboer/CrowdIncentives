@@ -35,6 +35,12 @@ a:hover {
     height:500px;
 }
 
+table.form th {
+    background-color:#eee;
+    text-align: left;
+    vertical-align: top;
+}
+
 p.alone {
     margin-top:20px;
     margin-bottom:20px;

@@ -37,12 +37,13 @@ class StoryDAL(val roundId: Long) {
         val r = SQL(
           """
             SELECT g.id, g.name, g.create_date, g.last_modification, u.username,
-                  g.user_id, u.code
+                  g.user_id, u.code, g.summary
             FROM global g INNER JOIN users u ON g.user_id = u.id
             WHERE g.id={id} and g.round_id={round}
           """).on('id -> globalId, 'round -> roundId)().headOption
 
-        val story = if (r.isEmpty) null else IntegratedStory(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")))
+        val story = if (r.isEmpty) null else IntegratedStory(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")),
+        summary = r.get.apply[Option[String]]("summary").getOrElse(null))
 
         val data = SQL(
           """
@@ -78,7 +79,7 @@ class StoryDAL(val roundId: Long) {
           .executeInsert()
 
         //save all associations
-        updateIntegratedStory(IntegratedStory(id.get, newStory.name, newStory.createDate, newStory.lastModification, newStory.author, newStory.parts))
+        updateIntegratedStory(IntegratedStory(id.get, newStory.name, newStory.createDate, newStory.lastModification, newStory.author, newStory.parts, newStory.summary))
 
         id.get
     }
@@ -93,6 +94,9 @@ class StoryDAL(val roundId: Long) {
           WHERE id={id}
              """).on('name -> newStory.name, 'id -> newStory.id).executeUpdate()
 
+        if(newStory.summary!=null) {
+          SQL("UPDATE global SET summary = {summary} WHERE id={id}").on('id->newStory.id, 'summary->newStory.summary).executeUpdate()
+        }
 
         //delete old
         SQL(
