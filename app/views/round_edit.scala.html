@@ -1,4 +1,4 @@
-@(round: Round, onlineUsers:List[User], pings: List[Ping], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
+@(round: Round, onlineUsers:List[User], pings: List[Ping], globals:List[IntegratedStory], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
 
     @index(indexData) {
         <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
@@ -66,6 +66,24 @@
                 }
             </table>
         }
+
+        @if(globals.size > 0) {
+            <h1>Global proposals</h1>
+            copy paste this table into an Excel sheet and save it as CSV
+            <table class="list" style="margin-top : 30 px ;">
+                <tr>
+                    <th>URL</th>
+                </tr>
+                @for(g<-globals) {
+                    <tr class="bg@(counter.incrementAndGet()%2)">
+                        <td>
+                            http://kcc.mit.edu/outlet/@round.id/@g.id
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+
 
         @if(pings.size > 0) {
             <h1>Pings</h1>

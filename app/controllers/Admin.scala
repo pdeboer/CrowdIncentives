@@ -29,10 +29,11 @@ object Admin extends Controller {
         Forbidden(views.html.error(IndexData(u)))
       } else {
         val roundDAL = new RoundDAL()
-        val pings = new PingDAL(u.round).getAllPings()
+        val pings = new PingDAL(roundId).getAllPings()
         val onlineUsers = roundDAL.getUsers(roundId)
+        val globals = new StoryDAL(roundId).getIntegratedStories()
 
-        Ok(views.html.round_edit(roundDAL.getRound(roundId), onlineUsers, pings, IndexData(u), isInsert =  false))
+        Ok(views.html.round_edit(roundDAL.getRound(roundId), onlineUsers, pings, globals, IndexData(u), isInsert =  false))
       }
   }
 
@@ -59,7 +60,7 @@ object Admin extends Controller {
       if (!utils.Security.checkIsAdmin(u)) {
         Forbidden(views.html.error(IndexData(u)))
       } else {
-        Ok(views.html.round_edit(Round(), Nil, Nil, IndexData(u), isInsert=true))
+        Ok(views.html.round_edit(Round(), Nil, Nil, Nil, IndexData(u), isInsert=true))
       }
   }
 
