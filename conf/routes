@@ -37,5 +37,7 @@ POST        /messages/public                  controllers.MessageController.send
 
 GET         /ping/online                      controllers.PingController.getOnline()
 
+GET         /outlet/:round/:story             controllers.Outlet.show(round:Long, story:Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.at(path="/public", file)
