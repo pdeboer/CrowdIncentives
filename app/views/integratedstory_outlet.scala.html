@@ -2,6 +2,12 @@
 
 @main("Welcome to CrowdIncentive") {
     <h2>@global.name</h2>
+
+    @if(template.globalSummaryTitle!=null){
+        <p><strong>@template.globalSummaryTitle</strong></p>
+        <p>@global.summary</p>
+    }
+
     @if(template.doubleValueName!=null && template.doubleValuesSummed) {
         <p class="part_doubleValue">
             <span class="title">Total @template.doubleValueName: </span>
@@ -23,10 +29,5 @@
         }
     }else{
         No data yet.
-    }
-
-    @if(template.globalSummaryTitle!=null){
-        <p><strong>@template.globalSummaryTitle</strong></p>
-        <p>@global.summary</p>
     }
 }
