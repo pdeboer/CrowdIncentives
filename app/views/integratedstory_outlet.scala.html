@@ -17,6 +17,8 @@
 
     @if(global.parts.size > 0) {
         @for(p <- global.parts) {
+            <div class="part">
+            <h3>@p.name</h3>
             <p class="before">@p.template.beforeText</p>
             <p class="part_content">@p.content</p>
             @if(template.doubleValueName!=null) {
@@ -26,6 +28,7 @@
                 </p>
             }
             <p class="after">@p.template.afterText</p>
+            </div>
         }
     }else{
         No data yet.

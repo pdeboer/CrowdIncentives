@@ -46,6 +46,12 @@ p.alone {
     margin-bottom:20px;
 }
 
+div.part {
+    border:1px solid #ccc;
+    margin-bottom:20px;
+    background-color:#eee;
+}
+
 #roundcounter {
     float:right;
     color:#009;
