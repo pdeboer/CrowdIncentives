@@ -16,7 +16,7 @@
     </script>
 
     @templatePart.beforeText
-    <form action="/part/@templatePart.id/save/@part.id" method="post" enctype="application/x-www-form-urlencoded" class="edit" onsubmit="return checkForm();">
+    <form action="/part/@templatePart.id/save/@part.id" method="post" enctype="multipart/form-data" class="edit" onsubmit="return checkForm();">
         <table class="form">
             <tr>
                 <th>Name</th>
@@ -31,6 +31,18 @@
                 <th>@template.doubleValueName</th>
                 <td><input type="text" name="doubleValue" value="@part.doubleValueFormatted"/></td>
             </tr>
+            }
+            @if(templatePart.titleForURLField!=null) {
+                <tr>
+                    <th>@templatePart.titleForURLField</th>
+                    <td><input type="text" name="url" value="@part.url" /></td>
+                </tr>
+            }
+            @if(templatePart.titleForImageField!=null) {
+                <tr>
+                    <th>@templatePart.titleForImageField</th>
+                    <td><input type="file" name="image" value="@part.image" /></td>
+                </tr>
             }
             <tr>
                 <th><a href="/part/@templatePart.id" onclick="return confirm('all changes will be lost if you cancel')">cancel</a></th>

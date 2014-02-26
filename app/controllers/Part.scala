@@ -51,7 +51,17 @@ object Part extends Controller {
           val content = map.get("content").get.head
           val doubleValueOption = map.get("doubleValue").getOrElse(Nil).headOption
           val doubleValueNumeric = doubleValueOption.getOrElse("0").replaceAll("[^0-9\\.]", "")
-          val part = StoryPart(partId, name, content, new Date(), new Date(), u, doubleValue = doubleValueNumeric.toDouble)
+          val url = map.get("url").getOrElse(Nil).headOption.getOrElse(null)
+          val imageUrl = map.get("image").getOrElse(Nil).headOption.getOrElse(null)
+          val image = if (imageUrl != null) {
+            val file = request.body.asMultipartFormData.get.file("image").get
+            val ctype = file.contentType.getOrElse("")
+            scala.io.Source.fromFile(file.ref.file).map(_.toByte).toArray
+          } else null
+
+          val part = StoryPart(partId, name, content, new Date(), new Date(), u,
+            doubleValue = doubleValueNumeric.toDouble,
+            url = url)
 
           if (partId > 0) {
             //update

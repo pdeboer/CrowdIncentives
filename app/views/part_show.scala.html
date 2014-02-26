@@ -16,6 +16,12 @@
     @if(template.doubleValueName!=null) {
         <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @part.doubleValueFormatted</p>
     }
+    @if(templatePart.titleForURLField!=null) {
+        <p class="part_doubleValue"><span class="title">@templatePart.titleForURLField: </span> @part.url</p>
+    }
+    @if(templatePart.titleForImageField!=null) {
+        <p class="part_doubleValue"><span class="title">@templatePart.titleForImageField: </span> @part.image</p>
+    }
 
     <p class="after">@templatePart.afterText</p>
 

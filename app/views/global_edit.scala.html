@@ -52,6 +52,12 @@
                         @if(template.doubleValueName!=null) {
                             <th>@template.doubleValueName</th>
                         }
+                        @if(p.titleForURLField!=null) {
+                            <th>@p.titleForURLField</th>
+                        }
+                        @if(p.titleForImageField!=null) {
+                            <th>@p.titleForImageField</th>
+                        }
                         <th>Author</th>
                         <th>Last modification</th>
                         <th>&nbsp;</th>
@@ -65,6 +71,12 @@
                             <td>@t.name</td>
                             @if(template.doubleValueName!=null) {
                                 <td>@t.doubleValueFormatted</td>
+                            }
+                            @if(p.titleForURLField!=null) {
+                                <td>@t.url</td>
+                            }
+                            @if(p.titleForImageField!=null) {
+                                <td>@t.image</td>
                             }
                             <td>@t.author.name</td>
                             <td>@t.modificationDateFormatted</td>

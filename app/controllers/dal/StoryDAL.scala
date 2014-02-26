@@ -42,12 +42,14 @@ class StoryDAL(val roundId: Long) {
             WHERE g.id={id} and g.round_id={round}
           """).on('id -> globalId, 'round -> roundId)().headOption
 
-        val story = if (r.isEmpty) null else IntegratedStory(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")),
-        summary = r.get.apply[Option[String]]("summary").getOrElse(null))
+        val story = if (r.isEmpty) null
+        else IntegratedStory(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")),
+          summary = r.get.apply[Option[String]]("summary").getOrElse(null))
 
         val data = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, tp.id AS templatepart_id, tp.description as tpdesc, tp.before_text as tpbefore, after_text as tpafter, u.code, p.doubleValue, tp.short_text as shorttext
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, tp.id AS templatepart_id, tp.description as tpdesc, tp.before_text as tpbefore, after_text as tpafter, u.code, p.doubleValue, tp.short_text as shorttext, tp.title_for_url_field, tp.title_for_image_field,
+            p.url_value, p.image_ref
             FROM part p INNER JOIN users u ON p.user_id = u.id
               INNER JOIN global_parts gp ON p.id = gp.part_id AND gp.global_id = {global}
               INNER JOIN template_part tp ON p.template_part_id = tp.id
@@ -58,8 +60,12 @@ class StoryDAL(val roundId: Long) {
           StoryPart(r[Long]("part.id"), r[String]("part.name"), r[String]("part.body"), r[Date]("part.create_date"), r[Date]("part.last_modification"),
             author = User(r[Long]("part.user_id"), r[String]("users.username"), code = r[String]("code")),
             template = TemplatePart(r[Long]("template_part.id"), r[String]("template_part.description"), r[String]("template_part.before_text"), r[String]("template_part.after_text"),
-              shortText = r[String]("template_part.short_text")),
-            doubleValue = r[Double]("doubleValue"))
+              shortText = r[String]("template_part.short_text"),
+              titleForURLField = r[Option[String]]("template_part.title_for_url_field").getOrElse(null),
+              titleForImageField = r[Option[String]]("template_part.title_for_image_field").getOrElse(null)),
+            doubleValue = r[Double]("doubleValue"),
+            url = r[Option[String]]("url_value").getOrElse(null),
+            image = r[Option[Long]]("image_ref"))
           )
 
         story.parts = data.toList
@@ -96,8 +102,8 @@ class StoryDAL(val roundId: Long) {
           WHERE id={id}
              """).on('name -> newStory.name, 'id -> newStory.id).executeUpdate()
 
-        if(newStory.summary!=null) {
-          SQL("UPDATE global SET summary = {summary} WHERE id={id}").on('id->newStory.id, 'summary->newStory.summary).executeUpdate()
+        if (newStory.summary != null) {
+          SQL("UPDATE global SET summary = {summary} WHERE id={id}").on('id -> newStory.id, 'summary -> newStory.summary).executeUpdate()
         }
 
         //delete old
@@ -121,13 +127,15 @@ class StoryDAL(val roundId: Long) {
       implicit c =>
         val data = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, p.doubleValue
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, p.doubleValue, p.url_value, p.image_ref
             FROM part p INNER JOIN users u ON p.user_id = u.id
             WHERE round_id = {round} AND template_part_id = {template}
             ORDER BY last_modification DESC
           """
         ).on('round -> roundId, 'template -> templatePartId)().map(r =>
-          StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")), doubleValue = r[Double]("doubleValue"))
+          StoryPart(r[Long]("id"), r[String]("name"), r[String]("body"), r[Date]("create_date"), r[Date]("last_modification"), author = User(r[Long]("user_id"), r[String]("username")), doubleValue = r[Double]("doubleValue"),
+            url = r[Option[String]]("url_value").getOrElse(null),
+            image = r[Option[Long]]("image_ref"))
           )
 
         data.toList
@@ -147,12 +155,26 @@ class StoryDAL(val roundId: Long) {
             'author -> updated.author.id, 'id -> updated.id,
             'doubleValue -> updated.doubleValue).executeUpdate()
     }
+
+    setOptionalFieldsForPart(partId, updated)
+  }
+
+  private def setOptionalFieldsForPart(partId: Long, updated: StoryPart) {
+    DB.withConnection {
+      implicit c =>
+        if (updated.url != null) {
+          SQL(
+            """
+            UPDATE part SET url_value = {url} WHERE id={id}
+            """).on('url -> updated.url, 'id -> partId).executeUpdate()
+        }
+    }
   }
 
   def insertPart(templatePartId: Long, newPart: StoryPart) = {
     DB.withConnection {
       implicit c =>
-        val id = SQL(
+        val id:Option[Long] = SQL(
           """
             INSERT INTO part
               (name, body, create_date, last_modification, user_id, template_part_id, round_id, doubleValue)
@@ -161,6 +183,8 @@ class StoryDAL(val roundId: Long) {
         ).on('name -> newPart.name, 'body -> newPart.content,
             'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId, 'create -> newPart.createDate, 'mod -> newPart.lastModification, 'doubleValue -> newPart.doubleValue)
           .executeInsert()
+
+        setOptionalFieldsForPart(id.get, newPart)
 
         id
     }
@@ -193,7 +217,8 @@ class StoryDAL(val roundId: Long) {
       implicit c =>
         val r = SQL(
           """
-            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, u.code, p.doubleValue, p.template_part_id
+            SELECT p.id, p.name, p.body, p.create_date, p.last_modification, u.username, p.user_id, u.code,
+              p.doubleValue, p.template_part_id, p.url_value, p.image_ref
             FROM part p INNER JOIN users u ON p.user_id = u.id
             WHERE p.id={id} and p.round_id={round}
           """).on('id -> partId, 'round -> roundId)().headOption
@@ -201,7 +226,9 @@ class StoryDAL(val roundId: Long) {
         if (r.isEmpty) null
         else StoryPart(r.get.apply[Long]("id"), r.get.apply[String]("name"), r.get.apply[String]("body"), r.get.apply[Date]("create_date"), r.get.apply[Date]("last_modification"), author = User(r.get.apply[Long]("user_id"), r.get.apply[String]("username"), code = r.get.apply[String]("code")),
           doubleValue = r.get.apply[Double]("doubleValue"),
-          template = if (fetchTemplatePart) new TemplateDAL(roundId).getPart(r.get.apply[Long]("template_part_id")) else null)
+          template = if (fetchTemplatePart) new TemplateDAL(roundId).getPart(r.get.apply[Long]("template_part_id")) else null,
+          url = r.get.apply[Option[String]]("url_value").getOrElse(null),
+          image = r.get.apply[Option[Long]]("image_ref"))
     }
   }
 }

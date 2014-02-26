@@ -29,7 +29,7 @@ case class User(id: Long, name: String, round: Long = -1L, isAdmin: Boolean = fa
   def toJson = JsObject(Seq("id" -> JsNumber(id), "name" -> JsString(name)))
 }
 
-case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "", descriptionForGlobal: String = "", shortText:String="")
+case class TemplatePart(id: Long, name: String, beforeText: String = "", afterText: String = "", descriptionForGlobal: String = "", shortText:String="", titleForURLField:String=null, titleForImageField:String=null)
 
 case class FromTo(from: Date, to: Date) {
   def fromFormatted = Config.sdf.format(from)
@@ -87,7 +87,7 @@ object IntegratedStory {
   def empty(u: User) = IntegratedStory(-1, "", new Date(), new Date(), u)
 }
 
-case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d) {
+case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d, url:String=null, image:Option[Long]=None) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 
   def doubleValueFormatted = Config.df.format(doubleValue)
