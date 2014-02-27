@@ -87,7 +87,7 @@ object IntegratedStory {
   def empty(u: User) = IntegratedStory(-1, "", new Date(), new Date(), u)
 }
 
-case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d, url:String=null, image:Option[Long]=None) {
+case class StoryPart(id: Long, name: String, content: String = "", createDate: Date, lastModification: Date, author: User = null, template: TemplatePart = null, doubleValue: Double = 0d, url:String=null, var image:Option[Long]=None) {
   def modificationDateFormatted = Config.sdf.format(lastModification)
 
   def doubleValueFormatted = Config.df.format(doubleValue)

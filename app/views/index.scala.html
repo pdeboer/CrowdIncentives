@@ -92,7 +92,9 @@
 
         }
         getOnline();
+        @if(!index.user.isAdmin) {
         window.setInterval(function() { getOnline(); }, 10000);
+        }
         }
 
         function refreshMessages() {

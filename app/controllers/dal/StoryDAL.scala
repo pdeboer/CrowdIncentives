@@ -142,7 +142,7 @@ class StoryDAL(val roundId: Long) {
     }
   }
 
-  def updatePart(partId: Long, updated: StoryPart) {
+  def updatePart(partId: Long, updated: StoryPart,imageContent:Option[Array[Byte]]=None) {
     DB.withConnection {
       implicit c =>
         SQL(
@@ -154,6 +154,12 @@ class StoryDAL(val roundId: Long) {
           """).on('name -> updated.name, 'body -> updated.content,
             'author -> updated.author.id, 'id -> updated.id,
             'doubleValue -> updated.doubleValue).executeUpdate()
+    }
+
+    if(!imageContent.isEmpty) {
+      val imageDAL = new ImageDAL()
+      //getPart(partId).image.foreach(i=>imageDAL.delete(i)) //delete current
+      updated.image = Some(imageDAL.insert(imageContent.get))
     }
 
     setOptionalFieldsForPart(partId, updated)
@@ -168,10 +174,17 @@ class StoryDAL(val roundId: Long) {
             UPDATE part SET url_value = {url} WHERE id={id}
             """).on('url -> updated.url, 'id -> partId).executeUpdate()
         }
+
+        if (!updated.image.isEmpty) {
+          SQL(
+            """
+            UPDATE part SET image_ref = {image} WHERE id={id}
+            """).on('image -> updated.image, 'id -> partId).executeUpdate()
+        }
     }
   }
 
-  def insertPart(templatePartId: Long, newPart: StoryPart) = {
+  def insertPart(templatePartId: Long, newPart: StoryPart, imageContent:Option[Array[Byte]]=None) = {
     DB.withConnection {
       implicit c =>
         val id:Option[Long] = SQL(
@@ -183,6 +196,10 @@ class StoryDAL(val roundId: Long) {
         ).on('name -> newPart.name, 'body -> newPart.content,
             'author -> newPart.author.id, 'templatePart -> templatePartId, 'round -> roundId, 'create -> newPart.createDate, 'mod -> newPart.lastModification, 'doubleValue -> newPart.doubleValue)
           .executeInsert()
+
+        if(!imageContent.isEmpty) {
+          newPart.image = Some(new ImageDAL().insert(imageContent.get))
+        }
 
         setOptionalFieldsForPart(id.get, newPart)
 
@@ -207,8 +224,11 @@ class StoryDAL(val roundId: Long) {
   def copyPartToRound(partId: Long, targetRound: Long) {
     val part = getPart(partId, fetchTemplatePart = true)
     if (part != null) {
+      //retrieve image
+      val image = if(!part.image.isEmpty) new ImageDAL().get(part.image.get) else None
+
       val targetTemplate = new StoryDAL(targetRound)
-      targetTemplate.insertPart(part.template.id, part)
+      targetTemplate.insertPart(part.template.id, part, image)
     }
   }
 

@@ -41,7 +41,14 @@
             @if(templatePart.titleForImageField!=null) {
                 <tr>
                     <th>@templatePart.titleForImageField</th>
-                    <td><input type="file" name="image" value="@part.image" /></td>
+                    <td>
+                        <input type="file" name="image" />
+
+                        @if(!part.image.isEmpty) {
+                            <img src="/image/@part.image" height="100" />
+                        }
+
+                    </td>
                 </tr>
             }
             <tr>

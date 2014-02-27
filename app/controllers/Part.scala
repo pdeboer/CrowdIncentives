@@ -52,11 +52,12 @@ object Part extends Controller {
           val doubleValueOption = map.get("doubleValue").getOrElse(Nil).headOption
           val doubleValueNumeric = doubleValueOption.getOrElse("0").replaceAll("[^0-9\\.]", "")
           val url = map.get("url").getOrElse(Nil).headOption.getOrElse(null)
-          val imageUrl = map.get("image").getOrElse(Nil).headOption.getOrElse(null)
-          val image = if (imageUrl != null) {
+
+          val imageName = map.get("image").getOrElse(Nil).headOption.getOrElse(null)
+          val image = if (imageName != null) {
             val file = request.body.asMultipartFormData.get.file("image").get
             val ctype = file.contentType.getOrElse("")
-            scala.io.Source.fromFile(file.ref.file).map(_.toByte).toArray
+           Some(scala.io.Source.fromFile(file.ref.file).map(_.toByte).toArray)
           } else null
 
           val part = StoryPart(partId, name, content, new Date(), new Date(), u,
@@ -68,13 +69,12 @@ object Part extends Controller {
             if (!Security.checkUserAllowedToEditPart(u, partId)) {
               Forbidden(views.html.error(IndexData(u)))
             } else {
-              val current = storyDAL.getPart(partId)
-              storyDAL.updatePart(partId, part)
+              storyDAL.updatePart(partId, part, image)
               Redirect("/part/" + templatePartId + "/show/" + partId)
             }
           } else {
             //insert
-            val newId: Option[Long] = storyDAL.insertPart(templatePartId, part)
+            val newId: Option[Long] = storyDAL.insertPart(templatePartId, part, image)
             Redirect("/part/" + templatePartId + "/show/" + newId.get)
           }
         }
