@@ -23,6 +23,12 @@
                 </p>
             }
             <p class="after">@p.template.afterText</p>
+            @if(p.template.titleForURLField!=null) {
+            <p class="after">@p.url</p>
+            }
+            @if(p.template.titleForImageField!=null && !p.image.isEmpty) {
+            <p class="after"><img src="/image/@p.image.get" height="100"/> </p>
+            }
         }
     }else{
         No data yet.

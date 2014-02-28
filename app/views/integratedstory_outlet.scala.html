@@ -28,6 +28,16 @@
                 </p>
             }
             <p class="after">@p.template.afterText</p>
+                @if(p.template.titleForURLField!=null && !p.url==null) {
+                    <p class="part_doubleValue"><span class="title">@p.template.titleForURLField: </span> @p.url</p>
+                }
+                @if(p.template.titleForImageField!=null && !p.image.isEmpty) {
+
+                    <p class="part_doubleValue">
+                        <span class="title">@p.template.titleForImageField: </span>
+                        <a href="/image/@p.image" target="_blank"><img  src="/image/@p.image" height="100" /></a>
+                    </p>
+                }
             </div>
         }
     }else{

@@ -52,12 +52,6 @@
                         @if(template.doubleValueName!=null) {
                             <th>@template.doubleValueName</th>
                         }
-                        @if(p.titleForURLField!=null) {
-                            <th>@p.titleForURLField</th>
-                        }
-                        @if(p.titleForImageField!=null) {
-                            <th>@p.titleForImageField</th>
-                        }
                         <th>Author</th>
                         <th>Last modification</th>
                         <th>&nbsp;</th>
@@ -72,18 +66,21 @@
                             @if(template.doubleValueName!=null) {
                                 <td>@t.doubleValueFormatted</td>
                             }
-                            @if(p.titleForURLField!=null) {
-                                <td>@t.url</td>
-                            }
-                            @if(p.titleForImageField!=null) {
-                                <td>@t.image</td>
-                            }
                             <td>@t.author.name</td>
                             <td>@t.modificationDateFormatted</td>
                             <td><a onclick="toggle ( 'content@t.id')">show</a></td>
                         </tr>
                         <tr class="bg@(counter.get() % 2)" style="display : none ;" id="content@t.id">
-                            <td colspan="5" class="part_content">@t.content</td>
+                            <td colspan="@(5 + (if(template.doubleValueName) 1 else 0) )" class="part_content">
+                                @t.content
+                                @if(p.titleForURLField!=null) {
+                                    <p class="part_doubleValue"><span class="title">@p.titleForURLField: </span> @t.url</p>
+                                }
+                                @if(p.titleForImageField!=null && !t.image.isEmpty) {
+                                    <p class="part_doubleValue"><span class="title">@p.titleForImageField: </span> <img src="/image/@t.image.get" height="100"/> </p>
+                                }
+
+                            </td>
                         </tr>
                     }
                 </table>

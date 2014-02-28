@@ -57,9 +57,8 @@ object Part extends Controller {
           val image = if (!imageName.isEmpty) {
             val file = imageName.get
             val ctype = file.contentType.getOrElse("")
-            val data = scalax.io.Resource.fromFile(file.ref.file).byteArray
 
-            Some(data)
+            if(ctype.startsWith("image")) Some(scalax.io.Resource.fromFile(file.ref.file).byteArray) else None
           } else None
 
           val part = StoryPart(partId, name, content, new Date(), new Date(), u,
