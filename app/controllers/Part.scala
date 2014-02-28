@@ -46,19 +46,21 @@ object Part extends Controller {
           Forbidden(views.html.error(IndexData(u)))
         } else {
           //form handling
-          val map = request.body.asFormUrlEncoded.get
+          val map = request.body.asMultipartFormData.get.asFormUrlEncoded
           val name = map.get("name").get.head
           val content = map.get("content").get.head
           val doubleValueOption = map.get("doubleValue").getOrElse(Nil).headOption
           val doubleValueNumeric = doubleValueOption.getOrElse("0").replaceAll("[^0-9\\.]", "")
           val url = map.get("url").getOrElse(Nil).headOption.getOrElse(null)
 
-          val imageName = map.get("image").getOrElse(Nil).headOption.getOrElse(null)
-          val image = if (imageName != null) {
-            val file = request.body.asMultipartFormData.get.file("image").get
+          val imageName = request.body.asMultipartFormData.get.file("image")
+          val image = if (!imageName.isEmpty) {
+            val file = imageName.get
             val ctype = file.contentType.getOrElse("")
-           Some(scala.io.Source.fromFile(file.ref.file).map(_.toByte).toArray)
-          } else null
+            val data = scalax.io.Resource.fromFile(file.ref.file).byteArray
+
+            Some(data)
+          } else None
 
           val part = StoryPart(partId, name, content, new Date(), new Date(), u,
             doubleValue = doubleValueNumeric.toDouble,
