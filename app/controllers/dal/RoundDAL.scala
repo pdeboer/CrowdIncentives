@@ -1,7 +1,7 @@
 package controllers.dal
 
 import play.api.db.DB
-import controllers.{User, Code, Round, TemplatePart}
+import controllers.{User, Code, Round}
 import anorm._
 import play.api.Play.current
 import java.util.Date
@@ -48,7 +48,7 @@ class RoundDAL() {
     }
   }
 
-  def insertRound(round: Round, prevRoundID: String = null) = {
+  def insertRound(round: Round, prevRoundID: String = null, copyIntegratedStories: Boolean = true) = {
     DB.withConnection {
       implicit c =>
 
@@ -85,15 +85,17 @@ class RoundDAL() {
             })
 
             //copy integrated stories
-            val integratedStories = old.getIntegratedStories()
-            integratedStories.foreach(s => {
-              val story = old.getIntegratedStory(s.id)
+            if (copyIntegratedStories) {
+              val integratedStories = old.getIntegratedStories()
+              integratedStories.foreach(s => {
+                val story = old.getIntegratedStory(s.id)
 
-              val replacedStoryParts = story.parts.map(p => fresh.getPart(partMapping(p.id))).toList
+                val replacedStoryParts = story.parts.map(p => fresh.getPart(partMapping(p.id))).toList
 
-              story.parts = replacedStoryParts
-              fresh.insertIntegratedStory(story)
-            })
+                story.parts = replacedStoryParts
+                fresh.insertIntegratedStory(story)
+              })
+            }
           }
 
         }
@@ -102,14 +104,14 @@ class RoundDAL() {
     }
   }
 
-  def getUsers(roundId:Long):List[User] = {
+  def getUsers(roundId: Long): List[User] = {
     DB.withConnection {
-      implicit c=>
+      implicit c =>
         val data = SQL(
           """
             SELECT id, username, round, code FROM users WHERE round={round}
             ORDER BY code ASC
-          """).on('round->roundId)().map(r=>
+          """).on('round -> roundId)().map(r =>
           User(r[Long]("id"), r[String]("username"), r[Long]("round"), code = r[String]("code"))).toList
 
         data
@@ -154,12 +156,12 @@ class RoundDAL() {
    * get round that starts the latest
    * @return
    */
-  def getNextRound():Round = {
+  def getNextRound(): Round = {
     getRounds().foldLeft(Round(startTime = new Date(0L)))((l, r) =>
-      if(l.startTime.before(new Date()) && l.endTime.after(new Date())) {
+      if (l.startTime.before(new Date()) && l.endTime.after(new Date())) {
         // is right now
         return l
-      } else if(l.id == -1L || l.startTime.before(r.startTime)) r
+      } else if (l.id == -1L || l.startTime.before(r.startTime)) r
       else l)
   }
 

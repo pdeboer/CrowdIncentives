@@ -33,7 +33,9 @@
                 @if(isInsert) {
                     <tr>
                         <th>round ID of which stories should be copied from</th>
-                        <td><input type="text" name="prevround" /></td>
+                        <td><input type="text" name="prevround" />
+                            <input type="checkbox" name="includeIntegrated" value="1" checked /> Include integrated stories
+                        </td>
                     </tr>
                 }
                 <tr>

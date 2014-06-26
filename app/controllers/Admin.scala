@@ -109,8 +109,9 @@ object Admin extends Controller {
           Redirect("/admin/edit/" + roundId)
         } else {
           val prevRoundId = map.get("prevround").get.head
+          val copyIntegrated = map.get("includeIntegrated").isDefined
           //insert
-          val newId: Long = roundDAL.insertRound(newRound, prevRoundId)
+          val newId: Long = roundDAL.insertRound(newRound, prevRoundId, copyIntegrated)
           Redirect("/admin/edit/" + newId)
         }
       }

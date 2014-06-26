@@ -67,12 +67,21 @@
         }
         calculateRemainingTime();
 
+        var messageBeingSent = false;
         function sendMessage() {
+            if(document.getElementById('messagetext' ).value == "") return false;
+
+            if(messageBeingSent) {
+                console.log("already sending a message, please be patient.");
+                return;
+            }
+            messageBeingSent = true;
             $.ajax({
                 type:"post",
                 data: $("#sendmessage" ).serialize(),
                 url:"/messages/public",
-                success: function(data) { document.getElementById("messagetext" ).value=""; }
+                success: function(data) { document.getElementById("messagetext" ).value="";messageBeingSent=false; },
+                failure: function() {messageBeingSent=false;}
             })
             return false;
         }
