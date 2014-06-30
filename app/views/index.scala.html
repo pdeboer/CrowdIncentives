@@ -101,8 +101,21 @@
 
         }
         getOnline();
+
+        function sendPing() {
+        $.ajax ( {
+        type : "get",
+        format : "text/html",
+        url : "/ping/ping",
+        success : function ( data, textStatus ) {
+        }
+        } ) ;
+        }
+        sendPing();
+
+
         @if(!index.user.isAdmin) {
-        window.setInterval(function() { getOnline(); }, 10000);
+        window.setInterval(function() { getOnline(); }, 30000);
         }
         }
 
@@ -135,6 +148,7 @@
         refreshMessages();
 
         window.setInterval(function() { calculateRemainingTime(); }, 1000);
-        window.setInterval(function() { refreshMessages(); }, 2000);
+        window.setInterval(function() { sendPing(); }, 20*1000);
+        window.setInterval(function() { refreshMessages(); }, 3000);
     </script>
 }

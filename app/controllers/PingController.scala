@@ -23,7 +23,6 @@ object PingController extends Controller {
       } else {
         //also set user active
         val pingDAL = new PingDAL(u.round)
-        pingDAL.setActive(u.id)
 
         val onlineUsers = pingDAL.getOnlineUsers(60) //one minute
 
@@ -35,4 +34,17 @@ object PingController extends Controller {
         Ok(views.html.plain(resString.substring(1, resString.size - 1)))
       }
   }
-}
+
+  def ping() = Action {
+    implicit request =>
+      val u = U.user(session)
+      if (utils.Security.checkIfRedirectToWaitingRoom(u)) {
+        Redirect("/wait")
+      } else {
+        //also set user active
+        val pingDAL = new PingDAL(u.round)
+        pingDAL.setActive(u.id)
+
+        Ok(views.html.plain(""))
+      }
+  }}

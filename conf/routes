@@ -36,6 +36,7 @@ GET         /messages                         controllers.MessageController.allM
 POST        /messages/public                  controllers.MessageController.sendPublicMessage()
 
 GET         /ping/online                      controllers.PingController.getOnline()
+GET         /ping/ping                      controllers.PingController.ping()
 
 GET         /outlet/:round/:story             controllers.Outlet.show(round:Long, story:Long)
 
