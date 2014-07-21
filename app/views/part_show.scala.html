@@ -16,7 +16,7 @@
     @if(template.doubleValueName!=null) {
         <p class="part_doubleValue"><span class="title">@template.doubleValueName: </span> @part.doubleValueFormatted</p>
     }
-    @if(templatePart.titleForURLField!=null && !part.url == null) {
+    @if(templatePart.titleForURLField!=null && part.url != null) {
         <p class="part_doubleValue"><span class="title">@templatePart.titleForURLField: </span> @part.url</p>
     }
     @if(templatePart.titleForImageField!=null && !part.image.isEmpty) {

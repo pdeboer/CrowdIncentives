@@ -1,6 +1,17 @@
 @(data: List[Round], indexData: IndexData, counter: Counter = new Counter())
 
     @index(indexData) {
+        <h2>Change CURRENT ROUND of user that is logged in</h2>
+        <form action="/admin/changeRound" method="post" enctype="application/x-www-form-urlencoded">
+            New Round:
+            <select name="newRound">
+            @for(r<-data) {
+                <option value="@r.id"@if(r.id == indexData.user.round){ selected="selected" }>@r.id - @r.description</option>
+            }
+            </select>
+            <input type="submit" value="save"/>
+        </form>
+
     <h2>Rounds</h2>
 
         <a href="/admin/create">Create Round</a>
@@ -29,15 +40,4 @@
         }else{
             No rounds yet
         }
-
-    <h2>Change CURRENT ROUND of user that is logged in</h2>
-    <form action="/admin/changeRound" method="post" enctype="application/x-www-form-urlencoded">
-        New Round:
-            <select name="newRound">
-                @for(r<-data) {
-                    <option value="@r.id"@if(r.id == indexData.user.round){ selected="selected" }>@r.id - @r.description</option>
-                }
-            </select>
-        <input type="submit" value="save"/>
-        </form>
 }
