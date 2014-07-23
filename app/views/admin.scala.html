@@ -27,7 +27,7 @@
                     <th>&nbsp;</th>
                 </tr>
                 @for(r <- data) {
-                    @if(r.id < 71) {
+                    @if(r.id > 70) {
                         <tr class="bg@(counter.incrementAndGet() % 2)">
                             <td>@r.id</td>
                             <td>@r.description</td>
