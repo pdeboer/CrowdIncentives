@@ -27,14 +27,16 @@
                     <th>&nbsp;</th>
                 </tr>
                 @for(r <- data) {
-                    <tr class="bg@(counter.incrementAndGet() % 2)">
-                        <td>@r.id</td>
-                        <td>@r.description</td>
-                        <td>@r.templateId</td>
-                        <td>@r.startTimeFormatted</td>
-                        <td>@r.endTimeFormatted</td>
-                        <td><a href="/admin/edit/@r.id">edit</a></td>
-                    </tr>
+                    @if(r.id < 71) {
+                        <tr class="bg@(counter.incrementAndGet() % 2)">
+                            <td>@r.id</td>
+                            <td>@r.description</td>
+                            <td>@r.templateId</td>
+                            <td>@r.startTimeFormatted</td>
+                            <td>@r.endTimeFormatted</td>
+                            <td><a href="/admin/edit/@r.id">edit</a></td>
+                        </tr>
+                    }
                 }
             </table>
         }else{
