@@ -1,4 +1,4 @@
-@(round: Round, onlineUsers:List[User], pings: List[Ping], globals:List[IntegratedStory], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
+@(round: Round, onlineUsers:List[User], pings: List[Ping], globals:List[IntegratedStory], templateParts:List[TemplatePart], indexData: IndexData, isInsert: Boolean = false, counter: Counter = new Counter())
 
     @index(indexData) {
         <form action="/admin/save/@round.id" method="post" enctype="application/x-www-form-urlencoded" class="edit">
@@ -75,12 +75,22 @@
             <table class="list" style="margin-top : 30 px ;">
                 <tr>
                     <th>URL</th>
+                    <th>Global Story Turker</th>
+                    @for(p<-templateParts) {
+                        <th>@p.name</th>
+                    }
                 </tr>
                 @for(g<-globals) {
                     <tr class="bg@(counter.incrementAndGet()%2)">
                         <td>
-                            http://kcc.mit.edu/outlet/@round.id/@g.id
+                            http://kcc.mit.edu:9000/outlet/@round.id/@g.id
                         </td>
+                        <td>
+                            @g.author.code
+                        </td>
+                        @for(p<-templateParts) {
+                            <td>@Option.apply(g.partsForTemplate(p.id).headOption.getOrElse(StoryPart.empty).author).getOrElse(User(-1, "")).code</td>
+                        }
                     </tr>
                 }
             </table>
