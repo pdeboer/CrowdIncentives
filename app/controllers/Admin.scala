@@ -32,8 +32,9 @@ object Admin extends Controller {
         val pings = new PingDAL(roundId).getAllPings()
         val onlineUsers = roundDAL.getUsers(roundId)
         val globals = new StoryDAL(roundId).getIntegratedStories()
+        val templateParts = new TemplateDAL(roundId).getParts()
 
-        Ok(views.html.round_edit(roundDAL.getRound(roundId), onlineUsers, pings, globals, IndexData(u), isInsert =  false))
+        Ok(views.html.round_edit(roundDAL.getRound(roundId), onlineUsers, pings, globals, templateParts, IndexData(u), isInsert =  false))
       }
   }
 
